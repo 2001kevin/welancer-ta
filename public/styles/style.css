@@ -1,0 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;400;500;600&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+.header{
+    position: relative;
+    background-image: url('../images/landing\ page\ 1.png');
+    background-position: center;
+    background-size: cover;
+    height: 100vh;
+
+}
+
+.header::before {
+  content: "";
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  background-color: rgba(0, 0, 0, 0.521);
+
+}
+
+.content{
+    position: relative;
+    z-index: 9999;
+    height: 100vh;
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+.background{
+    background-image: url('../images/landing\ page\ 1.png');
+    background-position: center;
+    background-size: cover;
+}
+
