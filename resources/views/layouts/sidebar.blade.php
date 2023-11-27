@@ -39,19 +39,6 @@
 
                 <h5 class="sidebar-title ">Master Data</h5>
 
-                <a href="./index.html" class="sidebar-item " onclick="toggleActive(this)">
-                    <!-- <img src="./assets/img/global/grid.svg" alt=""> -->
-
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M21 14H14V21H21V14Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M10 14H3V21H10V14Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M21 3H14V10H21V3Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M10 3H3V10H10V3Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-
-                    <span>Jasa</span>
-                </a>
-
                 <!-- <a href="./employees.html" class="sidebar-item"> -->
                 <!-- <img src="./assets/img/global/users.svg" alt=""> -->
                 <a href="{{ route('kategori') }}" class="sidebar-item {{ Request::is('dashboard/kategori') ? 'active' : ''  }}" onclick="toggleActive(this)">
@@ -72,16 +59,6 @@
                         </svg>
 
                     <span>Paket Jasa</span>
-                </a>
-
-                <a href="#" class="sidebar-item" onclick="toggleActive(this)">
-                    <!-- <img src="./assets/img/global/dollar-sign.svg" alt=""> -->
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 1V23" stroke="#ABB3C4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M17 5H9.5C8.57174 5 7.6815 5.36875 7.02513 6.02513C6.36875 6.6815 6 7.57174 6 8.5C6 9.42826 6.36875 10.3185 7.02513 10.9749C7.6815 11.6313 8.57174 12 9.5 12H14.5C15.4283 12 16.3185 12.3687 16.9749 13.0251C17.6313 13.6815 18 14.5717 18 15.5C18 16.4283 17.6313 17.3185 16.9749 17.9749C16.3185 18.6313 15.4283 19 14.5 19H6" stroke="#ABB3C4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-
-                    <span>Rincian Jasa</span>
                 </a>
 
                 <a href="{{ route('skill') }}" class="sidebar-item {{ Request::is('dashboard/skill', 'skill/create') ? 'active' : ''  }}" onclick="toggleActive(this)">
