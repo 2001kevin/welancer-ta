@@ -33,7 +33,6 @@
           </table>
         </div>
       </div>
-
       @foreach ($kategoris as $kategori)
           <!-- update -->
             <div class="modal fade" id="updateKategori-{{ $kategori->id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -77,7 +76,6 @@
             </div>
             </div>
         @endforeach
-
         @foreach ($kategoris as $kategori)
           <!-- Modal Delete -->
             <div class="modal fade" id="deleteModal-{{ $kategori->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -110,7 +108,5 @@
                     </div>
                 </div>
             </div>
-
         @endforeach
-
 @endsection

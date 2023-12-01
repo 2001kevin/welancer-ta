@@ -11,4 +11,8 @@ class paketJasa extends Model
 
     protected $guarded = ['id'];
     protected $table = 'paket_jasas';
+
+    public function jasa(){
+        return $this->hasMany(Jasa::class);
+    }
 }

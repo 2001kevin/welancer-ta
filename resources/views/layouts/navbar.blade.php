@@ -5,16 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('styles/style.css') }}">
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>Landing Page</title>
+    <title>Home Page</title>
 </head>
 <body>
     @yield('content')
     <section class="header">
         <div class="content flex flex-col justify-between">
-            <nav class="flex justify-between py-7 px-32 text-white">
+            <nav class="flex justify-between py-7 px-32 text-white items-center">
                 <div class="flex justify-center py-0">
                     <img src="images/LOGO.png" alt="logo">
-                    <a class="text-2xl" href="">Welancer</a>
+                    <a class="text-2xl font-bold" href="">Welancer</a>
                 </div>
                 <div class="font-semibold">
                      <a class="text-center mx-3" href="">Home</a>
@@ -30,7 +30,6 @@
                             </button>
                                 <ul class="dropdown-menu absolute hidden text-gray-700 pt-1">
                                     <li class=""><a class="rounded-t bg-gray-200 hover:bg-gray-400 py-2 px-4 block whitespace-no-wrap" href="{{ route('dashboard') }}">Dashboard</a></li>
-                                    <li class=""><a class="bg-gray-200 hover:bg-gray-400 py-2 px-4 block whitespace-no-wrap" href="#">Two</a></li>
                                     <li class="">
                                         <a class="rounded-b bg-gray-200 hover:bg-gray-400 py-2 px-4 block whitespace-no-wrap" href="{{ route('logout') }}">logout</a>
                                     </li>

@@ -106,14 +106,60 @@
             </div>
         </div>
     </section>
-    <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
-    <section class="review">
-        <div class="mx-32">
-            <div>
+    <hr class="h-px my-8 bg-gray-200 border-0 ">
+    <section class="review pb-12">
+        <div class="flex mx-32">
+            <div class="">
                 <img src="images/review.png" alt="">
             </div>
-            <div>
-
+            <div class="ml-24">
+                <h1 class="text-[40px] font-bold">Meet Client Satisfaction <br> after working with us</h1>
+                <p class="font-semibold">Great</p>
+                <p class="text-slate-500 ">Ultricies amet vulputate nulla in elit elit orci vitae tortor. Nunc ut <br> pretium lectus aliquet varius pretium. Nec convallis morbi sapien <br> aliquet augue. Nulla nulla integer pellentesque neque cum amet, <br>turpis lacus, massa. Eu velit nunc adipiscing tincidunt blandi.</p>
+                <div class="flex mt-5">
+                    <img src="{{ asset('images/Rectangle 45.png') }}" alt="">
+                    <div class="ml-3 flex-row">
+                        <div>
+                            <p class=" font-semibold">Angela Putri</p>
+                        </div>
+                        <div>
+                            <p class="text-slate-500">Entepreuneur</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="footer bg-[#0a142f] h-96 flex justify-center items-center p-32">
+        <div class="flex flex-col items-center">
+            <div class="flex py-0 text-center">
+                    <img src="images/LOGO.png" alt="logo">
+                    <a class="text-2xl font-bold text-white ml-2" href="">Welancer</a>
+            </div>
+            <div class="text-white flex gap-20 mt-6">
+                <a href="">Works</a>
+                <a href="">Services</a>
+                <a href="">Contact Us</a>
+                <a href="">Careers</a>
+            </div>
+            <div class="flex gap-20 mt-6">
+                <a href="">
+                    <img src="{{ asset('images/ig icon.svg') }}" alt="">
+                </a>
+                <a href="">
+                    <img src="{{ asset('images/fb icon.svg') }}" alt="">
+                </a>
+                <a href="">
+                    <img src="{{ asset('images/twitter icon.svg') }}" alt="">
+                </a>
+                <a href="">
+                    <img src="{{ asset('images/linked in icon.svg') }}" alt="">
+                </a>
+            </div>
+            <div class="text-white mt-6 flex gap-20">
+                <p>Copyright 2024</p>
+                <p>Terms & Conditions</p>
+                <p>Privacy</p>
             </div>
         </div>
     </section>

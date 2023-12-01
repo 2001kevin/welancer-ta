@@ -8,7 +8,6 @@
                             <div class="text-center mb-2">
                                     <h1><strong>Add Data Skill</strong></h1>
                                 </div>
-
                                 <form action="{{ route('store-skill') }}" method="POST" class="row sign-up-form form g-3" enctype="multipart/form-data">
                                   @csrf
                                     <div class="col-md-6">

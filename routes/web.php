@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Authentication;
+use App\Http\Controllers\JasaController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\PaketJasaController;
 use App\Http\Controllers\SkillController;
@@ -51,4 +52,8 @@ Route::post('skill/store', [SkillController::class, 'storeSkill'])->name('store-
 Route::post('skill/update/{id}', [SkillController::class, 'updateSkill'])->name('update-skill');
 Route::post('skill/delete/{id}', [SkillController::class, 'deleteSkill'])->name('delete-skill');
 
-
+Route::get('dashboard/jasa', [JasaController::class, 'jasa'])->name('jasa');
+Route::get('jasa/create', [JasaController::class, 'createJasa'])->name('create-jasa');
+Route::post('jasa/store', [JasaController::class, 'storeJasa'])->name('store-jasa');
+Route::post('jasa/update/{id}', [JasaController::class, 'updateJasa'])->name('update-jasa');
+Route::post('jasa/delete/{id}', [JasaController::class, 'deleteJasa'])->name('delete-jasa');

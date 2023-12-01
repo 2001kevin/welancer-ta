@@ -33,7 +33,6 @@
           </table>
         </div>
       </div>
-
       @foreach ($skills as $skill)
           <!-- update -->
             <div class="modal fade" id="updateSkill-{{ $skill->id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -77,7 +76,6 @@
             </div>
             </div>
         @endforeach
-
         @foreach ($skills as $skill)
           <!-- Modal Delete -->
             <div class="modal fade" id="deleteModal-{{ $skill->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -110,7 +108,5 @@
                     </div>
                 </div>
             </div>
-
         @endforeach
-
 @endsection

@@ -11,4 +11,8 @@ class Kategori extends Model
 
     protected $guarded = ['id'];
     protected $table = 'kategoris';
+
+    public function jasa(){
+        return $this->hasMany(Jasa::class);
+    }
 }
