@@ -1,5 +1,6 @@
 @extends('layouts.sidebar')
 @section('main')
+
     <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-10">
@@ -24,15 +25,15 @@
                                   <label for="min_price" class="form-label">Harga Maximal</label>
                                       <input type="number" placeholder="harga maximal" name="max_price" class="form-control" id="name" required>
                                   <label for="">Paket Jasa</label>
-                                  <select class="form-select" name="paket_jasa" aria-label="Default select example">
-                                    <option selected>Pilih Paket Jasa</option>
+                                  <select class="form-select" name="paket_jasa" aria-label="Default select example" required>
+                                    <option value selected>Pilih Paket Jasa</option>
                                     @foreach ($paketJasas as $paketJasa)
                                         <option value="{{ $paketJasa->id }}">{{ $paketJasa->nama }}</option>
                                     @endforeach
                                   </select>
                                   <label for="">Kategori</label>
-                                  <select class="form-select" name="kategori" aria-label="Default select example">
-                                    <option selected>Pilih Kategori</option>
+                                  <select class="form-select" name="kategori" aria-label="Default select example" required>
+                                    <option value selected>Pilih Kategori</option>
                                     @foreach ($kategoris as $kategori)
                                         <option value="{{ $kategori->id }}">{{ $kategori->nama }}</option>
                                     @endforeach
@@ -46,4 +47,11 @@
                 </div>
             </div>
         </div>
+        <script>
+            @if (!empty($errors->all()))
+                    @foreach ($errors->all() as $error)
+                        toastr.error("{{$error}}")
+                    @endforeach
+            @endif
+        </script>
 @endsection

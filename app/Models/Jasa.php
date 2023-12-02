@@ -12,11 +12,11 @@ class Jasa extends Model
     protected $table = 'jasas';
 
     public function paketJasa(){
-        return $this->belongsTo(paketJasa::class, 'id');
+        return $this->belongsTo(paketJasa::class, 'paket_jasa_id');
     }
 
     public function kategori(){
-        return $this->belongsTo(kategori::class, 'id');
+        return $this->belongsTo(kategori::class, 'kategori_id');
     }
 
 }

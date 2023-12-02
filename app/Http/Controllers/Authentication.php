@@ -38,7 +38,7 @@ class Authentication extends Controller
             'password' => Hash::make($request->password),
         ]);
         $user->save();
-
+        toast('Registrasi Sukses!','success');
         return redirect()->route('login-user')->with('success', 'Registration success, Please Login!');
     }
 
@@ -50,6 +50,7 @@ class Authentication extends Controller
 
         // return $request;
         if (Auth::guard('pegawai')->attempt($credentials)) {
+            toast('Login Sukses!','success');
             return redirect()->intended('/');
         }
 
@@ -72,6 +73,7 @@ class Authentication extends Controller
 
         // return $request;
         if (Auth::guard('web')->attempt($credentials)) {
+            toast('Login Sukses!','success');
             return redirect()->intended('/');
         }
 

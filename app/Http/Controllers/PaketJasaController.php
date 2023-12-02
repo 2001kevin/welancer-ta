@@ -28,6 +28,7 @@ class PaketJasaController extends Controller
             'nama' => $request->nama,
             'deskripsi' => $request->deskripsi
         ]);
+        toast('Data Paket Jasa Sukses Dibuat!','success');
         return redirect(route('paketJasa'));
     }
 
@@ -41,12 +42,13 @@ class PaketJasaController extends Controller
             'nama' => $request->nama,
             'deskripsi' => $request->deskripsi
         ]);
-
+        toast('Data Paket Jasa Sukses Diedit!','success');
         return redirect(route('paketJasa'));
     }
 
     public function deletepaketJasa($id){
         DB::table('paket_jasas')->where('id', $id)->delete();
+        toast('Data Paket Jasa Sukses Dihapus!','success');
         return redirect(route('paketJasa'));
     }
 }

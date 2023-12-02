@@ -53,14 +53,6 @@
                       </button>
                   </div>
               </form>
-
-              <div class="flex items-center justify-between mt-4">
-                  <span class="w-1/5 border-b md:w-1/4"></span>
-
-                  <a href="#" class="text-xs text-gray-500 uppercase hover:underline">or sign up</a>
-
-                  <span class="w-1/5 border-b md:w-1/4"></span>
-              </div>
           </div>
       </div>
   </section>

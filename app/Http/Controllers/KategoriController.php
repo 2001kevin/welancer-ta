@@ -28,6 +28,7 @@ class KategoriController extends Controller
             'nama' => $request->nama,
             'deskripsi' => $request->deskripsi
         ]);
+        toast('Data Kategori Sukses Dibuat!','success');
         return redirect(route('kategori'));
     }
 
@@ -41,12 +42,13 @@ class KategoriController extends Controller
             'nama' => $request->nama,
             'deskripsi' => $request->deskripsi
         ]);
-
+        toast('Data Kategori Sukses Diedit!','success');
         return redirect(route('kategori'));
     }
 
     public function deletekategori($id){
         DB::table('kategoris')->where('id', $id)->delete();
+        toast('Data Kategori Sukses Dihapus!','success');
         return redirect(route('kategori'));
     }
 }

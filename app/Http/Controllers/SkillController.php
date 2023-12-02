@@ -28,6 +28,7 @@ class SkillController extends Controller
             'nama' => $request->nama,
             'deskripsi' => $request->deskripsi
         ]);
+        toast('Data Skill Sukses Dibuat!','success');
         return redirect(route('skill'));
     }
 
@@ -41,12 +42,13 @@ class SkillController extends Controller
             'nama' => $request->nama,
             'deskripsi' => $request->deskripsi
         ]);
-
+        toast('Data Skill Sukses Diedit!','success');
         return redirect(route('skill'));
     }
 
     public function deleteSkill($id){
         DB::table('skills')->where('id', $id)->delete();
+        toast('Data Skill Sukses Dihapus!','success');
         return redirect(route('skill'));
     }
 }

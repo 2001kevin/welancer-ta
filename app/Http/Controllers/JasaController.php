@@ -41,6 +41,7 @@ class JasaController extends Controller
             'paket_jasa_id' => $request->paket_jasa,
             'kategori_id' => $request->kategori,
         ]);
+        toast('Data Jasa Sukses Dibuat!','success');
         return redirect(route('jasa'));
     }
 
@@ -62,11 +63,13 @@ class JasaController extends Controller
             'paket_jasa_id' => $request->paket_jasa,
             'kategori_id' => $request->kategori,
         ]);
+        toast('Data Jasa Sukses Diedit!','success');
         return redirect(route('jasa'));
     }
 
     public function deleteJasa($id){
         DB::table('jasas')->where('id', $id)->delete();
+        toast('Data Jasa Sukses Dihapus!','success');
         return redirect(route('jasa'));
     }
 }
