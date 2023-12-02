@@ -49,8 +49,8 @@ class JasaController extends Controller
         $request->validate([
             'nama' => 'required',
             'deskripsi' => 'required',
-            'min_price' => 'required|numeric',
-            'max_price' => 'required|numeric',
+            'min_price' => 'required|numeric|lte:max_price',
+            'max_price' => 'required|numeric|gte:min_price',
             'paket_jasa' => 'required',
             'kategori' => 'required'
         ]);

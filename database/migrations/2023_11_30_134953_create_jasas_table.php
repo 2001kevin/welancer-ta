@@ -21,8 +21,8 @@ return new class extends Migration
             $table->decimal('max_price');
             $table->unsignedBigInteger('paket_jasa_id');
             $table->unsignedBigInteger('kategori_id');
-            $table->foreign('paket_jasa_id')->references('id')->on('paket_jasas');
-            $table->foreign('kategori_id')->references('id')->on('kategoris');
+            $table->foreign('paket_jasa_id')->references('id')->on('paket_jasas')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('kategori_id')->references('id')->on('kategoris')->onUpdate('cascade')->onDelete('cascade');;
             $table->timestamps();
         });
     }
