@@ -23,7 +23,7 @@
                         <th scope="row">{{ $loop->index+1 }}</th>
                         <td>{{ $skill->nama }}</td>
                         <td>{{ $skill->deskripsi }}</td>
-                        <td>
+                        <td class="d-flex gap-2">
                             <button class="button-edit" data-bs-toggle="modal" data-bs-target="#updateSkill-{{ $skill->id }}"><i class="fas fa-pencil-alt"></i></button>
                             <button class="button-delete"><i class="fas fa-times" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ $skill->id }}"></i></button>
                         </td>
@@ -33,6 +33,7 @@
           </table>
         </div>
       </div>
+      
       @foreach ($skills as $skill)
           <!-- update -->
             <div class="modal fade" id="updateSkill-{{ $skill->id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">

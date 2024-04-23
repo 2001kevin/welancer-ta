@@ -11,12 +11,20 @@ class Jasa extends Model
     protected $guarded = ['id'];
     protected $table = 'jasas';
 
-    public function paketJasa(){
-        return $this->belongsTo(paketJasa::class, 'paket_jasa_id');
+    public function detail_paket(){
+        return $this->hasMany(DetailPaket::class);
     }
 
     public function kategori(){
         return $this->belongsTo(kategori::class, 'kategori_id');
+    }
+
+    public function rincian_jasa(){
+        return $this->hasMany(RincianJasa::class);
+    }
+
+    public function detail_transaksi(){
+        return $this->hasMany(DetailTransaksi::class);
     }
 
 }

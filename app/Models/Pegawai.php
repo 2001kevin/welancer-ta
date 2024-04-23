@@ -15,6 +15,19 @@ class Pegawai extends Model implements Authenticatable
 
     protected $guarded = ['id'];
     protected $table = 'pegawais';
+    protected $primaryKey = 'id';
+
+    public function detailJasa(){
+        return $this->hasMany(DetailJasa::class);
+    }
+
+    public function mappingGrup(){
+        return $this->hasMany(MappingGrup::class);
+    }
+
+    public function diskusis(){
+        return $this->hasMany(Diskusi::class);
+    }
 
     // public function getAuthIdentifierName() {
     //     return 'id';

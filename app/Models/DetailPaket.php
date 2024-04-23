@@ -5,18 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class paketJasa extends Model
+class DetailPaket extends Model
 {
     use HasFactory;
 
     protected $guarded = ['id'];
-    protected $table = 'paket_jasas';
+    protected $table = 'detail_pakets';
 
     public function jasa(){
-        return $this->hasMany(Jasa::class);
+        return $this->belongsTo(Jasa::class);
     }
 
-    public function detail_paket(){
-        return $this->hasMany(DetailPaket::class);
+    public function paket_jasa(){
+        return $this->belongsTo(paketJasa::class);
     }
+
+
 }

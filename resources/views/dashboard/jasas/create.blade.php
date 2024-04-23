@@ -47,11 +47,5 @@
                 </div>
             </div>
         </div>
-        <script>
-            @if (!empty($errors->all()))
-                    @foreach ($errors->all() as $error)
-                        toastr.error("{{$error}}")
-                    @endforeach
-            @endif
-        </script>
+
 @endsection

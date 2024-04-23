@@ -13,14 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('jasas', function (Blueprint $table) {
+        Schema::create('mapping_grups', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('pegawai_id');
+            $table->unsignedBigInteger('transaksi_id');
             $table->string('nama');
-            $table->string('deskripsi');
-            $table->decimal('min_price');
-            $table->decimal('max_price');
-            $table->unsignedBigInteger('kategori_id');
-            $table->foreign('kategori_id')->references('id')->on('kategoris')->onUpdate('cascade')->onDelete('cascade');;
+            $table->foreign('pegawai_id')->references('id')->on('pegawais')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('transaksi_id')->references('id')->on('transaksis')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -32,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('jasas');
+        Schema::dropIfExists('mapping_grups');
     }
 };

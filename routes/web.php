@@ -2,10 +2,16 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Authentication;
+use App\Http\Controllers\DetailPaketController;
+use App\Http\Controllers\DetailTransaksiController;
+use App\Http\Controllers\DiskusiController;
+use App\Http\Controllers\GroupController;
 use App\Http\Controllers\JasaController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\PaketJasaController;
+use App\Http\Controllers\RincianJasaController;
 use App\Http\Controllers\SkillController;
+use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -24,7 +30,7 @@ Route::get('/', function () {
     return view('home');
 });
 
-Route::get('login-user', [Authentication::class, 'indexLoginUser'])->name('login-user');
+Route::get('login-user', [Authentication::class, 'indexLoginUser'])->name('login');
 Route::get('login-admin', [Authentication::class, 'indexLoginAdmin'])->name('login-admin');
 Route::post('loginAdmin', [Authentication::class, 'loginAdmin'])->name('loginAdmin');
 Route::post('login', [Authentication::class, 'loginUser'])->name('loginUser');
@@ -57,3 +63,39 @@ Route::get('jasa/create', [JasaController::class, 'createJasa'])->name('create-j
 Route::post('jasa/store', [JasaController::class, 'storeJasa'])->name('store-jasa');
 Route::post('jasa/update/{id}', [JasaController::class, 'updateJasa'])->name('update-jasa');
 Route::post('jasa/delete/{id}', [JasaController::class, 'deleteJasa'])->name('delete-jasa');
+
+Route::get('dashboard/rincianJasa', [RincianJasaController::class, 'rincianJasa'])->name('rincian-jasa');
+Route::get('rincian/create', [RincianJasaController::class, 'createRincian'])->name('create-rincian');
+Route::post('rincian/store', [RincianJasaController::class, 'storeRincian'])->name('store-rincian');
+Route::post('rincian/update/{id}', [RincianJasaController::class, 'updateRincian'])->name('update-rincian');
+Route::post('rincian/delete/{id}', [RincianJasaController::class, 'deleteRincian'])->name('delete-rincian');
+
+Route::get('detail/create', [JasaController::class, 'createDetailJasa'])->name('detail-jasa');
+Route::post('detail/store', [JasaController::class, 'storeDetailJasa'])->name('store-detail-jasa');
+Route::post('detail/update/{id}', [JasaController::class, 'updateDetailJasa'])->name('update-detail-jasa');
+Route::post('detail/delete/{id}', [JasaController::class, 'deleteDetailJasa'])->name('delete-detail-jasa');
+
+Route::get('detail-paket/create', [DetailPaketController::class, 'create'])->name('create-detail-paket');
+Route::post('detail-paket/store', [DetailPaketController::class, 'store'])->name('store-detail-paket');
+Route::post('detail-paket/update/{id}', [DetailPaketController::class, 'update'])->name('update-detail-paket');
+Route::post('detail-paket/delete/{id}', [DetailPaketController::class, 'delete'])->name('delete-detail-paket');
+
+Route::middleware(['auth'])->group(function() {
+    Route::get('transaksi/create', [TransaksiController::class, 'createTransaksi'])->name('create-transaksi');
+    Route::post('transaksi/store', [TransaksiController::class, 'storeTransaksi'])->name('store-transaksi');
+    Route::get('transaksi/index', [TransaksiController::class, 'indexTransaksi'])->name('index-transaksi');
+
+    Route::get('service/index', [DetailTransaksiController::class, 'indexService'])->name('index-service');
+});
+Route::get('transaksi/indexAdmin', [TransaksiController::class, 'indexAdmin'])->name('index-transaksi-admin');
+Route::get('service/indexAdmin', [DetailTransaksiController::class, 'indexServiceAdmin'])->name('index-service-admin');
+
+Route::get('dashboard/grup', [GroupController::class, 'index'])->name('index-grup');
+Route::get('grup/create', [GroupController::class, 'create'])->name('grup-create');
+Route::post('grup/store', [GroupController::class, 'store'])->name('grup-store');
+
+Route::get('/dashboard/diskusi', [DiskusiController::class, 'index'])->name('index-diskusi');
+Route::post('/diskusi/store', [DiskusiController::class, 'store'])->name('store-diskusi');
+Route::get('/diskusi/room/{room}', [DiskusiController::class, 'room'])->name('room-diskusi');
+Route::get('/diskusi/get/{room}', [DiskusiController::class, 'getChat'])->name('get-diskusi');
+Route::post('/diskusi/send', [DiskusiController::class, 'sendChat'])->name('send-diskusi');

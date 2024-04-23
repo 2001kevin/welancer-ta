@@ -11,4 +11,8 @@ class skill extends Model
 
     protected $guarded = ['id'];
     protected $table = 'skills';
+
+    public function detailJasa(){
+        return $this->hasMany(DetailJasa::class);
+    }
 }
