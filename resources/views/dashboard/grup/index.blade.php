@@ -2,11 +2,11 @@
 @section('main')
     <div class="card border-0 shadow mb-4" style="width: 65rem;">
         <div class="card-body">
-            <div class="d-flex align-items-center mb-4">
-                <img src="{{ asset('images/LOGO.png') }}" alt="Welancer">
-                <span class="title-welancer ms-3">Groups</span>
-                <a href="{{ route('grup-create') }}" class="button-create ms-auto py-2 px-3 bd-highlight">Create</a>
-            </div>
+        <div class="d-flex align-items-center mb-4">
+            <img src="{{ asset('images/LOGO.png') }}" alt="Welancer">
+            <span class="title-welancer ms-3">Groups</span>
+            <a href="{{ route('grup-create', $transaksi->id) }}" class="button-create ms-auto py-2 px-3 bd-highlight">Create</a>
+        </div>
             <table class="table" id="dataTable">
                 <thead>
                     <tr>

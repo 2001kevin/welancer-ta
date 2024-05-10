@@ -12,7 +12,7 @@ class TransaksiController extends Controller
 {
     public function indexTransaksi(){
         $user_id = auth()->user()->id;
-        $transaksis = transaksi::where('user_id', $user_id)->get();
+        $transaksis = transaksi::where('user_id', $user_id)->orderBy('created_at', 'desc')->get();
 
         return view('dashboard.transaksi.index', compact('transaksis'));
     }
@@ -35,7 +35,7 @@ class TransaksiController extends Controller
         $totalValue = $request->input('totalValue');
 
         $status = 'On Negotiations';
-
+        // return $request->all();
         $transaksi = new transaksi();
         $transaksi->user_id = auth()->user()->id;
         $transaksi->pegawai_id = null;
@@ -48,33 +48,37 @@ class TransaksiController extends Controller
         // Dapatkan nilai dari formulir
         $selectedServiceId = $request->input('service');
 
-        // Ambil data jasa berdasarkan ID yang dipilih
-        $jasa = Jasa::find($selectedServiceId);
-
-        $detailTransaksi = new DetailTransaksi();
-        $detailTransaksi->transaksi_id = $transaksi->id;
-        $detailTransaksi->jasa_id = $request->service;
-        $detailTransaksi->qty = '0';
-        $detailTransaksi->Minharga_total = $jasa->min_price;
-        $detailTransaksi->Maxharga_total = $jasa->max_price;
-        $detailTransaksi->status = $status;
-        $data2 = $detailTransaksi->save();
-
-        $service_tambahans = $request->input('service_tambahan', []);
-        foreach ($service_tambahans as $service){
-            if($service !== '' && $service !== NULL){
-                $detailTransaksi = new DetailTransaksi();
-                $detailTransaksi->transaksi_id = $transaksi->id;
-                $detailTransaksi->jasa_id = $request->service;
-                $detailTransaksi->qty = '0';
-                $detailTransaksi->Minharga_total = $jasa->min_price;
-                $detailTransaksi->Maxharga_total = $jasa->max_price;
-                $detailTransaksi->status = $status;
-                $detailTransaksi->save();
-            }
+        $jasas = Jasa::find($selectedServiceId);
+        // $string = typeOf($jasa);
+        // // Ambil data jasa berdasarkan ID yang dipilih
+        // return $request->service;
+        foreach($jasas as $jasa){
+            $detailTransaksi = new DetailTransaksi();
+            $detailTransaksi->transaksi_id = $transaksi->id;
+            $detailTransaksi->jasa_id = $jasa->id;
+            $detailTransaksi->qty = '0';
+            $detailTransaksi->Minharga_total = $jasa->min_price;
+            $detailTransaksi->Maxharga_total = $jasa->max_price;
+            $detailTransaksi->status = $status;
+            $detailTransaksi->save();
+            // if($jasa){
+            // }
         }
+        // $service_tambahans = $request->input('service', []);
+        // foreach ($service_tambahans as $service){
+        //     if($service !== '' && $service !== NULL){
+        //         $detailTransaksi = new DetailTransaksi();
+        //         $detailTransaksi->transaksi_id = $transaksi->id;
+        //         $detailTransaksi->jasa_id = $request->service;
+        //         $detailTransaksi->qty = '0';
+        //         $detailTransaksi->Minharga_total = $jasa->min_price;
+        //         $detailTransaksi->Maxharga_total = $jasa->max_price;
+        //         $detailTransaksi->status = $status;
+        //         $detailTransaksi->save();
+        //     }
+        // }
 
-        if($data1 && $data2){
+        if($data1){
             toast('Transaction Created Successfully','success');
             return redirect(route('index-transaksi'));
         }

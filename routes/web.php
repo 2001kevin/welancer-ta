@@ -90,8 +90,8 @@ Route::middleware(['auth'])->group(function() {
 Route::get('transaksi/indexAdmin', [TransaksiController::class, 'indexAdmin'])->name('index-transaksi-admin');
 Route::get('service/indexAdmin', [DetailTransaksiController::class, 'indexServiceAdmin'])->name('index-service-admin');
 
-Route::get('dashboard/grup', [GroupController::class, 'index'])->name('index-grup');
-Route::get('grup/create', [GroupController::class, 'create'])->name('grup-create');
+Route::get('dashboard/grup/{id}', [GroupController::class, 'index'])->name('index-grup');
+Route::get('grup/create/{id}', [GroupController::class, 'create'])->name('grup-create');
 Route::post('grup/store', [GroupController::class, 'store'])->name('grup-store');
 
 Route::get('/dashboard/diskusi', [DiskusiController::class, 'index'])->name('index-diskusi');

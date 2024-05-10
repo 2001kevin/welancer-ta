@@ -5,6 +5,9 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     {{-- Tailwind CSS --}}
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Bootstrap CSS -->
@@ -18,7 +21,6 @@
         integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
-
 
     <title>Dashboard</title>
 </head>
@@ -164,7 +166,7 @@
                         </svg>
                         <span>Services</span>
                     </a>
-                    <h5 class="sidebar-title ">Group</h5>
+                    {{-- <h5 class="sidebar-title ">Group</h5>
                     <a href="{{ route('index-grup') }}" class="sidebar-item " onclick="toggleActive(this)">
                         <!-- <img src="./assets/img/global/dollar-sign.svg" alt=""> -->
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -183,7 +185,7 @@
                                 stroke="#ABB3C4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
                         <span>Group</span>
-                    </a>
+                    </a> --}}
                     <a href="{{ route('index-diskusi') }}" class="sidebar-item " onclick="toggleActive(this)">
                         <!-- <img src="./assets/img/global/dollar-sign.svg" alt=""> -->
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -245,7 +247,7 @@
                         </svg>
                         <span>Services</span>
                     </a>
-                    <h5 class="sidebar-title ">Group</h5>
+                    {{-- <h5 class="sidebar-title ">Group</h5>
                     <a href="{{ route('index-grup') }}" class="sidebar-item " onclick="toggleActive(this)">
                         <!-- <img src="./assets/img/global/dollar-sign.svg" alt=""> -->
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -264,7 +266,7 @@
                                 stroke="#ABB3C4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
                         <span>Group</span>
-                    </a>
+                    </a> --}}
                     <a href="{{ route('index-diskusi') }}" class="sidebar-item " onclick="toggleActive(this)">
                         <!-- <img src="./assets/img/global/dollar-sign.svg" alt=""> -->
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -339,7 +341,7 @@
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
                 integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous">
             </script>
-            <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
             <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
             <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
@@ -361,4 +363,5 @@
                     $('#dataTable3').DataTable();
                 });
             </script>
+
 </body>

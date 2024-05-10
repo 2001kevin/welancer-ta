@@ -65,6 +65,18 @@ html, body {
   background-color: rgb(195, 5, 5);
 }
 
+.button-group{
+  padding: 2px 8px;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  background-color: #17c098;
+}
+
+.button-group:hover{
+  background-color: #139678;
+}
+
 .title-welancer{
   font-weight: 650;
   font-size: 20px;

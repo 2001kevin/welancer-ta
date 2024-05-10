@@ -71,24 +71,24 @@
                             <label for="tipe" class="block mb-2 text-sm font-medium text-gray-900">Discussion
                                 Type</label>
                             <input type="text" name="tipe" id="tipe"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 "
-                                placeholder="Type product name" required="">
+                                class="bg-gray-50 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 "
+                                placeholder="Discussion Type" required="">
                         </div>
                         <p class="text-gray-500 mb-4">Select Group:</p>
                         <ul class="space-y-4 mb-4">
                             @foreach ($grups as $grup)
                                 <li>
-                                    <input type="radio" id="grup-{{ $grup->id }}" name="grup"
+                                    <input type="checkbox" id="grup-{{ $grup->id }}" name="grup"
                                         value="{{ $grup->id }}" class="hidden peer" required />
                                     <label for="grup-{{ $grup->id }}"
                                         class="inline-flex items-center justify-between w-full p-3 text-gray-900 bg-white border border-gray-200 rounded-lg cursor-pointer peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-900 hover:bg-gray-100 ">
                                         <div class="block">
                                             <div class="w-full text-lg font-semibold">{{ $grup->nama }}</div>
-                                            <div class="w-full text-gray-500 dark:text-gray-400">
+                                            <div class="w-full text-gray-500 peer-checked:text-blue-600">
                                                 {{ $grup->transaksis->nama }}
                                             </div>
                                         </div>
-                                        <svg class="w-4 h-4 ms-3 rtl:rotate-180 text-gray-500 dark:text-gray-400"
+                                        <svg class="w-4 h-4 ms-3 rtl:rotate-180 text-gray-500 peer-checked:"
                                             aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                                             viewBox="0 0 14 10">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"

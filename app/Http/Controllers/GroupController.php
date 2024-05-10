@@ -9,16 +9,17 @@ use Illuminate\Http\Request;
 
 class GroupController extends Controller
 {
-    public function index(){
-        $grups = MappingGrup::all();
-        return view('dashboard.grup.index', compact('grups'));
+    public function index($id){
+        $transaksi = transaksi::find($id);
+        $grups = MappingGrup::where('transaksi_id', $id)->get();
+        return view('dashboard.grup.index', compact('grups', 'transaksi'));
     }
 
-    public function create(){
+    public function create($id){
         $pegawais = Pegawai::all();
-        $transaksis = transaksi::all();
+        $transaksi = transaksi::find($id);
 
-        return view('dashboard.grup.create', compact('pegawais', 'transaksis'));
+        return view('dashboard.grup.create', compact('pegawais', 'transaksi'));
     }
 
     public function store(Request $request){
