@@ -5,8 +5,10 @@
             <div class="d-flex align-items-center mb-4">
                 <img src="{{ asset('images/LOGO.png') }}" alt="Welancer">
                 <span class="title-welancer ms-3">Transaction</span>
+                @auth('web')
                     <a href="{{ route('create-transaksi') }}" class="button-create ms-auto py-2 px-3 bd-highlight">Make
                         Project</a>
+                @endauth
             </div>
             @if ($transaksis->count() > 0)
                 <table class="table " id="dataTable">
@@ -18,34 +20,65 @@
                             <th scope="col">Cattegory</th>
                             <th scope="col">Total Price</th>
                             <th scope="col">Status</th>
-                            <th scope="col">Action</th>
+                            @auth('pegawai')
+                                <th scope="col">Action</th>
+                            @endcan
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($transaksis as $transaksi)
                             <tr>
-                                <th scope="row">{{ $loop->index + 1 }}</th>
-                                <td>{{ $transaksi->nama }}</td>
-                                @isset($transaksi->pegawai)
-                                    <td>{{ $transaksi->pegawai->name }}</td>
+                                @if ($transaksi->fix_price == null)
+                                    <th scope="row">{{ $loop->index + 1 }}</th>
+                                    <td>{{ $transaksi->nama }}</td>
+                                    @isset($transaksi->pegawai)
+                                        <td>{{ $transaksi->pegawai->name }}</td>
+                                    @else
+                                        <td>Transaction Not Approve Yet</td>
+                                    @endisset
+                                    <td>{{ $transaksi->kategori->nama }}</td>
+                                    <td>{{ $transaksi->jumlah_harga }}</td>
+                                    <td class="text-center">
+                                        <p class="badge bg-primary">{{ $transaksi->status }}</p>
+                                    </td>
+                                    @auth('pegawai')
+                                        <td>
+                                            <div class="flex gap-2">
+                                                <button class="button-group"><a href="{{ route('index-grup', $transaksi->id) }}" class="text-white"><i class="fas fa-user-friends"></i></a></button>
+                                                <button class="button-edit" data-modal-target="crud-modal-{{ $transaksi->id }}"
+                                                    data-modal-toggle="crud-modal-{{ $transaksi->id }}"><i
+                                                        class="fas fa-pencil-alt"></i></button>
+                                                <button class="button-delete"><i class="fas fa-times" data-bs-toggle="modal"
+                                                        data-bs-target=""></i></button>
+                                            </div>
+                                        </td>
+                                    @endauth
                                 @else
-                                    <td>Transaction Not Approve Yet</td>
-                                @endisset
-                                <td>{{ $transaksi->kategori->nama }}</td>
-                                <td>{{ $transaksi->jumlah_harga }}</td>
-                                <td>
-                                    <p class="badge bg-primary">{{ $transaksi->status }}</p>
-                                </td>
-                                <td>
-                                    <div class="flex gap-2">
-                                        <button class="button-group"><a href="{{ route('index-grup', $transaksi->id) }}" class="text-white"><i class="fas fa-user-friends"></i></a></button>
-                                        <button class="button-edit" data-modal-target="crud-modal-{{ $transaksi->id }}"
-                                            data-modal-toggle="crud-modal-{{ $transaksi->id }}"><i
-                                                class="fas fa-pencil-alt"></i></button>
-                                        <button class="button-delete"><i class="fas fa-times" data-bs-toggle="modal"
-                                                data-bs-target=""></i></button>
-                                    </div>
-                                </td>
+                                    <th scope="row">{{ $loop->index + 1 }}</th>
+                                    <td>{{ $transaksi->nama }}</td>
+                                    @isset($transaksi->pegawai)
+                                        <td>{{ $transaksi->pegawai->name }}</td>
+                                    @else
+                                        <td>Transaction Not Approve Yet</td>
+                                    @endisset
+                                    <td>{{ $transaksi->kategori->nama }}</td>
+                                    <td>@currency($transaksi->fix_price)</td>
+                                    <td class="text-center">
+                                        <p class="badge bg-primary">{{ $transaksi->status }}</p>
+                                    </td>
+                                    @auth('pegawai')
+                                        <td>
+                                            <div class="flex gap-2">
+                                                <button class="button-group"><a href="{{ route('index-grup', $transaksi->id) }}" class="text-white"><i class="fas fa-user-friends"></i></a></button>
+                                                <button class="button-edit" data-modal-target="crud-modal-{{ $transaksi->id }}"
+                                                    data-modal-toggle="crud-modal-{{ $transaksi->id }}"><i
+                                                        class="fas fa-pencil-alt"></i></button>
+                                                <button class="button-delete"><i class="fas fa-times" data-bs-toggle="modal"
+                                                        data-bs-target=""></i></button>
+                                            </div>
+                                        </td>
+                                    @endauth
+                                @endif
                             </tr>
                         @endforeach
                     </tbody>

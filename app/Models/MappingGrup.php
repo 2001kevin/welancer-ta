@@ -26,4 +26,8 @@ class MappingGrup extends Model
     public function transaksis(){
         return $this->belongsTo(transaksi::class, 'transaksi_id', 'id');
     }
+
+    public function mapping_sub_grups(){
+        return $this->hasMany(MappingSubGrup::class);
+    }
 }

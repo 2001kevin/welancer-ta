@@ -10,14 +10,12 @@ class DetailTransaksiController extends Controller
 {
     public function indexService(){
         $user_id = auth()->user()->id;
-        $services = Transaksi::with('detail_transaksi')->where('user_id', $user_id)->get();
-
-
+        $services = Transaksi::with('detail_transaksi')->where('user_id', $user_id)->orderBy('updated_at', 'desc')->get();
         return view('dashboard.detail_transaksi.index', compact('services'));
     }
 
     public function indexServiceAdmin(){
-        $services = Transaksi::with('detail_transaksi')->get();
+        $services = Transaksi::with('detail_transaksi')->orderBy('created_at', 'desc')->get();
         return view('dashboard.detail_transaksi.index', compact('services'));
     }
 }

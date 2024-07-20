@@ -2,23 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\FixPricesUpdated;
 use App\Models\DetailTransaksi;
 use App\Models\Jasa;
 use App\Models\Kategori;
 use App\Models\transaksi;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TransaksiController extends Controller
 {
     public function indexTransaksi(){
         $user_id = auth()->user()->id;
-        $transaksis = transaksi::where('user_id', $user_id)->orderBy('created_at', 'desc')->get();
+        $transaksis = transaksi::where('user_id', $user_id)->orderBy('updated_at', 'desc')->get();
 
         return view('dashboard.transaksi.index', compact('transaksis'));
     }
 
     public function indexAdmin(){
-        $transaksis = transaksi::all();
+        $transaksis = transaksi::orderBy('created_at', 'desc')->get();
         return view('dashboard.transaksi.index', compact('transaksis'));
     }
 
@@ -83,8 +85,34 @@ class TransaksiController extends Controller
             return redirect(route('index-transaksi'));
         }
         return view('dashboard.transaksi.index')->with('gagal', 'Menambah Paket Layanan');
+    }
 
+    public function updateTransaksi(Request $request, $id){
+        $transaksi = transaksi::find($id);
+        $transaksi->fix_price = $request->fix_price;
+        $transaksi->status = $request->status;
+        $transaksi->pegawai_id = auth()->guard('pegawai')->id();
+        $success = $transaksi->save();
 
+        if ($success) {
+            $transaksi_id = $transaksi->id;
 
+            $detailTransaksis = DetailTransaksi::where('transaksi_id', $transaksi_id)->get();
+            foreach ($detailTransaksis as $detailTransaksi) {
+                $detailTransaksi->status = $request->status;
+                $detailSuccess = $detailTransaksi->save();
+                if (!$detailSuccess) {
+                    toast('Failed to update detail transaction', 'error');
+                    return redirect()->back();
+                }
+            }
+
+            toast('Transaction Updated Successfully', 'success');
+            event(new FixPricesUpdated($transaksi));
+            return redirect()->back();
+        } else {
+            toast('Failed to update transaction', 'error');
+            return redirect()->back();
+        }
     }
 }

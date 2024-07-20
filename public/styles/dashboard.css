@@ -31,6 +31,18 @@ html, body {
   background-color: #4640DE;
 }
 
+.button-detail{
+  padding: 5px 9px;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  background-color: #3b82f6;
+}
+
+.button-detail:hover{
+  background-color: #2563eb;
+}
+
 .purple{
     background-color: #4640DE;
 }

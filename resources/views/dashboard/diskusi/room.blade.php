@@ -78,7 +78,7 @@
                         <ul class="space-y-4 mb-4">
                             @foreach ($grups as $grup)
                                 <li>
-                                    <input type="checkbox" id="grup-{{ $grup->id }}" name="grup"
+                                    <input type="radio" id="grup-{{ $grup->id }}" name="grup"
                                         value="{{ $grup->id }}" class="hidden peer" required />
                                     <label for="grup-{{ $grup->id }}"
                                         class="inline-flex items-center justify-between w-full p-3 text-gray-900 bg-white border border-gray-200 rounded-lg cursor-pointer peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-900 hover:bg-gray-100 ">

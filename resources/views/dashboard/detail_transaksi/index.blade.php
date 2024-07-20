@@ -14,7 +14,9 @@
                 <th scope="col">Transaction</th>
                 <th scope="col">Range Price</th>
                 <th scope="col">Status</th>
-                <th scope="col">Action</th>
+                @can('isSuperAdmin')
+                    <th scope="col">Action</th>
+                @endcan
               </tr>
             </thead>
             <tbody>
@@ -26,10 +28,12 @@
                                 <td>{{ $item->transaksi->nama }}</td>
                                 <td>Rp {{ number_format($item->Minharga_total, 2, ',', '.')  }} - Rp {{number_format($item->Maxharga_total, 2, ',', '.')  }}</td>
                                 <td><p class="badge bg-primary">{{ $item->status }}</p></td>
-                                <td class="d-flex gap-2">
-                                    <button class="button-edit" data-bs-toggle="modal" data-bs-target=""><i class="fas fa-pencil-alt"></i></button>
-                                    <button class="button-delete"><i class="fas fa-times" data-bs-toggle="modal" data-bs-target=""></i></button>
-                                </td>
+                                @can('isSuperAdmin')
+                                    <td class="d-flex gap-2">
+                                        <button class="button-edit" data-bs-toggle="modal" data-bs-target=""><i class="fas fa-pencil-alt"></i></button>
+                                        <button class="button-delete"><i class="fas fa-times" data-bs-toggle="modal" data-bs-target=""></i></button>
+                                    </td>
+                                @endcan
                         </tr>
                     @endforeach
                 @endforeach

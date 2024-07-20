@@ -52,6 +52,11 @@ class Authentication extends Controller
         if (Auth::guard('pegawai')->attempt($credentials)) {
             toast('Login Sukses!','success');
             return redirect()->intended('/');
+        }else{
+
+            return back()->withErrors([
+               'password' => 'Wrong email or password',
+           ]);
         }
 
         // if(Auth::attempt($credentials)){
@@ -60,9 +65,6 @@ class Authentication extends Controller
         //     return redirect()->intended('/');
         // }
 
-         return back()->withErrors([
-            'password' => 'Wrong email or password',
-        ]);
     }
 
     public function loginUser(Request $request){

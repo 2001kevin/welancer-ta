@@ -4,41 +4,42 @@
         <div class="card-body">
             <div class="d-flex align-items-center mb-4">
                 <img src="{{ asset('images/LOGO.png') }}" alt="Welancer">
-                <span class="title-welancer ms-3">Groups</span>
-                <a href="{{ route('grup-create', $transaksi->id) }}"
-                    class="button-create ms-auto py-2 px-3 bd-highlight">Create</a>
+                <span class="title-welancer ms-3">Sub Groups</span>
+                {{-- <a href="{{ route('grup-create', $transaksi->id) }}"
+                    class="button-create ms-auto py-2 px-3 bd-highlight">Create</a> --}}
             </div>
             <table class="table" id="dataTable">
                 <thead>
                     <tr>
                         <th scope="col">No</th>
                         <th scope="col">Name</th>
-                        <th scope="col">Project Manager</th>
-                        <th scope="col">Transaction</th>
+                        <th scope="col">Assigned To</th>
+                        <th scope="col">Service</th>
                         <th scope="col">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($grups as $grup)
+                    @foreach ($subGrups as $subGrup)
                         <tr>
                             <th scope="row">{{ $loop->index + 1 }}</th>
-                            <td>{{ $grup->nama }}</td>
+                            <td>{{ $subGrup->nama }}</td>
                             {{-- @foreach ($grup->pegawais as $pegawai)
                                 <td>{{ $pegawai }}</td>
                             @endforeach --}}
-                            <td>{{ $grup->pegawais->name }}</td>
+                            <td>{{ $subGrup->pegawai->name }}</td>
                             {{-- @foreach ($grup->transaksis as $trans)
                                 <td>{{ $trans->nama }}</td>
                             @endforeach --}}
-                            <td>{{ $grup->transaksis->nama }}</td>
-                            <td class="d-flex gap-2">
-                                <button data-tooltip-target="tooltip-default" class="button-group"><a href="{{ route('index-subGrup', $grup->id) }}"
-                                        class="text-white"><i class="fa-solid fa-people-line"></i></a></button>
-                                <button class="button-edit" data-bs-toggle="modal"
+                            <td>{{ $subGrup->detailTransaksi->jasa->nama }}</td>
+                            <td>
+                                <div class="d-flex gap-2">
+
+                                </div>
+                                {{-- <button class="button-edit" data-bs-toggle="modal"
                                     data-bs-target="#updateSkill-{{ $grup->id }}"><i
                                         class="fas fa-pencil-alt"></i></button>
                                 <button class="button-delete"><i class="fas fa-times" data-bs-toggle="modal"
-                                        data-bs-target="#deleteModal-{{ $grup->id }}"></i></button>
+                                        data-bs-target="#deleteModal-{{ $grup->id }}"></i></button> --}}
                             </td>
                         </tr>
                     @endforeach
