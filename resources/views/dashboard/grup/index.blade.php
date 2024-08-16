@@ -5,8 +5,14 @@
             <div class="d-flex align-items-center mb-4">
                 <img src="{{ asset('images/LOGO.png') }}" alt="Welancer">
                 <span class="title-welancer ms-3">Groups</span>
-                <a href="{{ route('grup-create', $transaksi->id) }}"
-                    class="button-create ms-auto py-2 px-3 bd-highlight">Create</a>
+                @if ($grups == '0')
+
+                @endif
+                @auth('pegawai')
+                    <a href="{{ route('grup-create', $transaksi->id) }}"
+                        class="button-create ms-auto py-2 px-3 bd-highlight">Create</a>
+
+                @endauth
             </div>
             <table class="table" id="dataTable">
                 <thead>

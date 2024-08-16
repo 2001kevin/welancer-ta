@@ -4,7 +4,7 @@
         <div class="card-body">
           <div class="d-flex align-items-center mb-4">
               <img src="{{ asset('images/LOGO.png') }}" alt="Welancer">
-              <span class="title-welancer ms-3">Services</span>
+              <span class="title-welancer ms-3">History</span>
           </div>
             <table class="table" id="dataTable">
             <thead>
@@ -14,27 +14,33 @@
                 <th scope="col">Transaction</th>
                 <th scope="col">Range Price</th>
                 <th scope="col">Status</th>
-                @can('isSuperAdmin')
+                @auth('pegawai')
                     <th scope="col">Action</th>
-                @endcan
+                @endauth
               </tr>
             </thead>
             <tbody>
+                @php
+                    $index = 1;
+                @endphp
                 @foreach ($services as $service)
                     @foreach ($service->detail_transaksi as $item)
                         <tr>
-                            <th scope="row">{{ $item->id }}</th>
+                            <th scope="row">{{ $index  }}</th>
                                 <td>{{ $item->jasa->nama}}</td>
                                 <td>{{ $item->transaksi->nama }}</td>
                                 <td>Rp {{ number_format($item->Minharga_total, 2, ',', '.')  }} - Rp {{number_format($item->Maxharga_total, 2, ',', '.')  }}</td>
                                 <td><p class="badge bg-primary">{{ $item->status }}</p></td>
-                                @can('isSuperAdmin')
+                                @auth('pegawai')
                                     <td class="d-flex gap-2">
                                         <button class="button-edit" data-bs-toggle="modal" data-bs-target=""><i class="fas fa-pencil-alt"></i></button>
                                         <button class="button-delete"><i class="fas fa-times" data-bs-toggle="modal" data-bs-target=""></i></button>
                                     </td>
-                                @endcan
+                                @endauth
                         </tr>
+                        @php
+                            $index++;
+                        @endphp
                     @endforeach
                 @endforeach
             </tbody>

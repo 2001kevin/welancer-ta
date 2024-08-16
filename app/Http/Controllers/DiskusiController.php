@@ -8,6 +8,7 @@ use App\Models\transaksi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Events\ChatEvent;
+use App\Models\Comment;
 use App\Models\DetailDiskusi;
 use App\Models\DetailTransaksi;
 use App\Models\MappingSubGrup;
@@ -20,12 +21,15 @@ class DiskusiController extends Controller
         if (auth()->check()) {
             $userId = auth()->id();
             $grups = MappingGrup::whereHas('mapping_sub_grups')->get();
-            $diskusis = Diskusi::where('user_id', $userId)->orderBy('created_at', 'desc')->get();
+            $diskusis = Diskusi::with(['comments'])->where('user_id', $userId)->whereNot('tanggal_diskusi', null)->orderBy('created_at', 'desc')->get();
+            // return $diskusis;
+            // dd($diskusis[0]->comments);
             return view('dashboard.diskusi.room', compact('diskusis', 'grups'));
         } else {
             $grups = MappingGrup::whereHas('mapping_sub_grups')->get();
-            $diskusis = Diskusi::orderBy('created_at', 'desc')->get();
+            $diskusis = Diskusi::with(['comments'])->orderBy('created_at', 'desc')->get();
             $admin = auth()->guard('pegawai')->id();
+            // dd($diskusis);
             return view('dashboard.diskusi.room', compact('diskusis', 'grups'));
         }
     }
@@ -55,6 +59,61 @@ class DiskusiController extends Controller
             return redirect(route('index-diskusi'));
         } else {
             toast('Discussion Room Failed to Create', 'failed');
+        }
+    }
+
+    public function updateDate(Request $request, $id)
+    {
+        $diskusi = Diskusi::find($id);
+        if ($diskusi) {
+            $diskusi->tanggal_diskusi = $request->date;
+            $success = $diskusi->save();
+            if ($success) {
+                toast('Schedule set Successfully', 'success');
+                return redirect(route('index-diskusi'));
+            }
+        }
+    }
+
+    public function accDiscussion($id){
+        $diskusi = Diskusi::find($id);
+        if($diskusi){
+            $diskusi->status = 'on discussion';
+            $success = $diskusi->save();
+            if ($success) {
+                toast('discussion set Successfully', 'success');
+                return redirect(route('index-diskusi'));
+            }
+        }
+    }
+
+    public function comment(Request $request, $id)
+    {
+
+        if (auth()->guard('pegawai')) {
+            $pegawai_id = auth()->guard('pegawai')->id();
+            $comment = new Comment();
+            $comment->senderUser_id = null;
+            $comment->senderPegawai_id = $pegawai_id;
+            $comment->diskusi_id = $id;
+            $comment->comment = $request->comment;
+            $success = $comment->save();
+            if ($success) {
+                toast('Comment Added Successfully', 'success');
+                return redirect(route('index-diskusi'));
+            }
+        } else {
+            $user_id = auth()->user()->id;
+            $comment = new Comment();
+            $comment->senderUser_id = $user_id;
+            $comment->senderPegawai_id = null;
+            $comment->diskusi_id = $id;
+            $comment->comment = $request->comment;
+            $success = $comment->save();
+            if ($success) {
+                toast('Comment Added Successfully', 'success');
+                return redirect(route('index-diskusi'));
+            }
         }
     }
 
@@ -121,7 +180,7 @@ class DiskusiController extends Controller
                     $room = Diskusi::where('id', $id_diskusi)->first();
                     $id_transaksi = $room->transaksi_id;
                     $det_transaksi = DetailTransaksi::where('transaksi_id', $id_transaksi)->get();
-                    return view('dashboard.diskusi.chat', compact('room', 'id_pegawai_grup','target_id', 'det_transaksi'));
+                    return view('dashboard.diskusi.chat', compact('room', 'id_pegawai_grup', 'target_id', 'det_transaksi'));
                 } else {
                     $my_id = auth()->id();
                     $user = User::find($my_id);

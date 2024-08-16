@@ -2,7 +2,7 @@
 @section('main')
 
 
-    <div class="card border-0 shadow mb-4" style="width: 65rem;">
+    {{-- <div class="card border-0 shadow mb-4" style="width: 65rem;">
         <div class="card-body">
           <div class="d-flex align-items-center mb-4">
               <img src="{{ asset('images/LOGO.png') }}" alt="Welancer">
@@ -35,7 +35,7 @@
             </tbody>
           </table>
         </div>
-      </div>
+      </div> --}}
 
       {{-- Modal Update Detail Pakeet --}}
       @foreach ($detailPakets as $detailPaket)
@@ -123,41 +123,41 @@
         @endforeach
 
 
- <div class="card border-0 shadow mb-4" style="width: 65rem;">
-        <div class="card-body">
-          <div class="d-flex align-items-center mb-4">
-              <img src="{{ asset('images/LOGO.png') }}" alt="Welancer">
-              <span class="title-welancer ms-3">Services</span>
-              <a href="{{ route('create-jasa') }}" class="button-create ms-auto py-2 px-3 bd-highlight">Create</a>
-          </div>
-            <table class="table table-borderless border-0" id="dataTable">
-            <thead>
-              <tr>
-                <th scope="col">No</th>
-                <th scope="col">Service</th>
-                <th scope="col">Description</th>
-                <th scope="col">Price</th>
-                <th scope="col">Category</th>
-                <th scope="col">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-                @foreach ($jasas as $jasa)
+        <div class="card border-0 shadow mb-4" style="width: 65rem;">
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-4">
+                    <img src="{{ asset('images/LOGO.png') }}" alt="Welancer">
+                    <span class="title-welancer ms-3">Services</span>
+                    <a href="{{ route('create-jasa') }}" class="button-create ms-auto py-2 px-3 bd-highlight">Create</a>
+                </div>
+                    <table class="table table-borderless border-0" id="dataTable">
+                    <thead>
                     <tr>
-                        <th scope="row">{{ $loop->index+1 }}</th>
-                        <td>{{ $jasa->nama }}</td>
-                        <td>{{ $jasa->deskripsi }}</td>
-                        <td>Rp {{ $jasa->min_price }} - Rp {{ $jasa->max_price }}</td>
-                        <td>{{ $jasa->kategori->nama }}</td>
-                        <td class="d-flex gap-2">
-                            <button class="button-edit" data-bs-toggle="modal" data-bs-target="#updateJasa-{{ $jasa->id }}"><i class="fas fa-pencil-alt"></i></button>
-                            <button class="button-delete"><i class="fas fa-times" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ $jasa->id }}"></i></button>
-                        </td>
+                        <th scope="col">No</th>
+                        <th scope="col">Service</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Action</th>
                     </tr>
-                @endforeach
-            </tbody>
-          </table>
-        </div>
+                    </thead>
+                    <tbody>
+                        @foreach ($jasas as $jasa)
+                            <tr>
+                                <th scope="row">{{ $loop->index+1 }}</th>
+                                <td>{{ $jasa->nama }}</td>
+                                <td>{{ $jasa->deskripsi }}</td>
+                                <td>Rp {{ $jasa->min_price }} - Rp {{ $jasa->max_price }}</td>
+                                <td>{{ $jasa->kategori->nama }}</td>
+                                <td class="d-flex gap-2">
+                                    <button class="button-edit" data-bs-toggle="modal" data-bs-target="#updateJasa-{{ $jasa->id }}"><i class="fas fa-pencil-alt"></i></button>
+                                    <button class="button-delete"><i class="fas fa-times" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ $jasa->id }}"></i></button>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
       </div>
 
       {{-- Modal Update jasa --}}

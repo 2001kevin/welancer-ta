@@ -1,12 +1,17 @@
 @extends('layouts.sidebar')
+@php
+    use Carbon\Carbon;
+@endphp
 @section('main')
     <div class="card border-0 shadow mb-4" style="width: 65rem;">
         <div class="card-body">
             <div class="d-flex align-items-center mb-4">
                 <img src="{{ asset('images/LOGO.png') }}" alt="Welancer">
                 <span class="title-welancer ms-3">Discussion Room</span>
-                <button class="button-create ms-auto py-2 px-3 bd-highlight" data-modal-target="crud-modal"
-                    data-modal-toggle="crud-modal">Create</button>
+                @auth('pegawai')
+                    <button class="button-create ms-auto py-2 px-3 bd-highlight" data-modal-target="crud-modal"
+                        data-modal-toggle="crud-modal">Create</button>
+                @endauth
             </div>
             <table class="table table-auto" id="dataTable">
                 <thead>
@@ -15,30 +20,288 @@
                         <th scope="col">Discussion Type</th>
                         <th scope="col">Customer</th>
                         <th scope="col">Transaction</th>
+                        <th scope="col">Schedule</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Comment</th>
                         <th scope="col">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($diskusis as $diskusi)
-                        <tr>
-                            <th scope="row">{{ $loop->index + 1 }}</th>
-                            <td>{{ $diskusi->tipe_diskusi }}</td>
-                            <td>{{ $diskusi->users->name }}</td>
-                            <td>{{ $diskusi->transaksis->nama }}</td>
-                            <td class="d-flex gap-2">
-                                <a class="py-[5px] px-[9px] rounded-[12px] bg-[#16c098] hover:bg-[#12AF8A] text-white"
-                                    href="{{ route('room-diskusi', $diskusi->id) }}"><i class="fa-solid fa-comment-dots"></i></a>
-                                <button class="button-edit" data-bs-toggle="modal" data-bs-target="#updateSkill-"><i
-                                        class="fas fa-pencil-alt"></i></button>
-                                <button class="button-delete"><i class="fas fa-times" data-bs-toggle="modal"
-                                        data-bs-target="#deleteModal-"></i></button>
-                            </td>
-                        </tr>
-                    @endforeach
+                    @auth('pegawai')
+                        @foreach ($diskusis as $diskusi)
+                            <tr class="text-center">
+                                <th scope="row">{{ $loop->index + 1 }}</th>
+                                <td>{{ $diskusi->tipe_diskusi }}</td>
+                                <td>{{ $diskusi->users->name }}</td>
+                                <td>{{ $diskusi->transaksis->nama }}</td>
+                                @if ($diskusi->tanggal_diskusi == null)
+                                    <td>
+                                        <button type="button" data-modal-target="schedule-modal-{{ $diskusi->id }}"
+                                            data-modal-toggle="schedule-modal-{{ $diskusi->id }}"
+                                            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xs px-3 py-2.5 me-2 mb-2 focus:outline-none">Set
+                                            Schedule</button>
+                                    </td>
+                                @else
+                                    <td>{{ Carbon::parse($diskusi->tanggal_diskusi)->format('d F Y') }}</td>
+                                @endif
+                                @if ($diskusi->status == 'not fixed' || $diskusi->status == 'null')
+                                    <td>
+                                            <button type="button"
+                                                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2.5 me-2 mb-2 focus:outline-none">Waiting</button>
+                                    </td>
+                                @elseif ($diskusi->status == 'on discussion')
+                                    <td>
+                                            <button type="button"
+                                                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-1 focus:outline-none">On Discussion</button>
+                                        </td>
+                                @elseif ($diskusi->status == 'fixed')
+                                    <td>
+                                        <button type="button"
+                                            class="text-white bg-[#16a34a] focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-1 focus:outline-none"><i
+                                                class="fa-solid fa-check"></i></button>
+                                    </td>
+                                @else
+                                    <td>
+                                            <button type="button"
+                                                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2.5 me-2 mb-2 focus:outline-none">Waiting</button>
+                                    </td>
+                                @endif
+                                <td class="text-center"><button class="button-comment"
+                                        data-modal-target="comment-modal-{{ $diskusi->id }}"
+                                        data-modal-toggle="comment-modal-{{ $diskusi->id }}"><i
+                                            class="fa-solid fa-comment"></i></button></td>
+                                <td>
+                                    <div class="flex gap-1">
+                                        @if ($diskusi->status == 'not fixed' )
+                                                <a class="py-[5px] px-[9px] rounded-[12px] bg-[#374151] text-white"
+                                                    ><i
+                                                        class="fa-solid fa-comment-dots"></i></a>
+                                            @elseif ($diskusi->status == 'on discussion')
+                                                <a class="py-[5px] px-[9px] rounded-[12px] bg-[#16c098] hover:bg-[#12AF8A] text-white"
+                                                    href="{{ route('room-diskusi', $diskusi->id) }}"><i
+                                                        class="fa-solid fa-comment-dots"></i></a>
+                                            @elseif($diskusi->status == 'fixed')
+                                                <a class="py-[5px] px-[9px] rounded-[12px] bg-[#374151] text-white"
+                                                    ><i
+                                                        class="fa-solid fa-comment-dots"></i></a>
+                                            @endif
+                                        <button class="button-edit" data-bs-toggle="modal" data-bs-target="#updateSkill-"><i
+                                                class="fas fa-pencil-alt"></i></button>
+                                        <button class="button-delete"><i class="fas fa-times" data-bs-toggle="modal"
+                                                data-bs-target="#deleteModal-"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    @endauth
+                    @auth('web')
+                        @foreach ($diskusis as $diskusi)
+                            @if ($diskusi->tanggal_diskusi == null)
+                            @else
+                                <tr class="text-center">
+                                    <th scope="row">{{ $loop->index + 1 }}</th>
+                                    <td>{{ $diskusi->tipe_diskusi }}</td>
+                                    <td>{{ $diskusi->users->name }}</td>
+                                    <td>{{ $diskusi->transaksis->nama }}</td>
+                                    <td>{{ Carbon::parse($diskusi->tanggal_diskusi)->format('d F Y') }}</td>
+                                    @if ($diskusi->status == 'not fixed' || $diskusi->status == 'null')
+                                        <td>
+                                            <form action="{{ route('acc-discussion', $diskusi->id) }}" method="POST">
+                                                @csrf
+                                                <button type="submit"
+                                                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2.5 me-2 mb-2 focus:outline-none">Agree</button>
+                                            </form>
+                                        </td>
+
+                                    @elseif($diskusi->status == 'fixed')
+                                        <td>
+                                            <button type="button"
+                                                class="text-white bg-[#16a34a] hover:bg-[#16a34a] focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-1 focus:outline-none"><i
+                                                    class="fa-solid fa-check"></i></button>
+                                        </td>
+                                    @elseif($diskusi->status == 'on discussion')
+                                        <td>
+                                            <button type="button"
+                                                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-1 focus:outline-none">On Discussion</button>
+                                        </td>
+                                    @endif
+                                    <td class="text-center"><button class="button-comment"
+                                            data-modal-target="comment-modal-{{ $diskusi->id }}"
+                                            data-modal-toggle="comment-modal-{{ $diskusi->id }}"><i
+                                                class="fa-solid fa-comment"></i></button></td>
+                                    <td>
+                                        <div class="d-flex gap-2">
+                                            @if ($diskusi->status == 'not fixed' )
+                                                <a class="py-[5px] px-[9px] rounded-[12px] bg-[#374151] text-white"
+                                                    ><i
+                                                        class="fa-solid fa-comment-dots"></i></a>
+                                            @elseif ($diskusi->status == 'on discussion')
+                                                <a class="py-[5px] px-[9px] rounded-[12px] bg-[#16c098] hover:bg-[#12AF8A] text-white"
+                                                    href="{{ route('room-diskusi', $diskusi->id) }}"><i
+                                                        class="fa-solid fa-comment-dots"></i></a>
+                                            @elseif($diskusi->status == 'fixed')
+                                                <a class="py-[5px] px-[9px] rounded-[12px] bg-[#374151] text-white"
+                                                    ><i
+                                                        class="fa-solid fa-comment-dots"></i></a>
+                                            @endif
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endif
+                        @endforeach
+                    @endauth
                 </tbody>
             </table>
         </div>
     </div>
+
+    {{-- comment modal --}}
+    @foreach ($diskusis as $diskusi)
+        <div id="comment-modal-{{ $diskusi->id }}" tabindex="-1" aria-hidden="true"
+            class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+            <div class="relative w-full max-w-md max-h-full">
+                <!-- Modal content -->
+                <div class="relative bg-white rounded-lg shadow ">
+                    <!-- Modal header -->
+                    <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
+                        <h3 class="text-xl font-medium text-gray-900">
+                            Comment
+                        </h3>
+                        <button type="button"
+                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+                            data-modal-hide="comment-modal-{{ $diskusi->id }}">
+                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 14 14">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                            </svg>
+                            <span class="sr-only">Close modal</span>
+                        </button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="p-4 md:p-5 space-y-4">
+                        {{-- isi comment --}}
+                        @if (!empty($diskusi->comments))
+                            @auth('pegawai')
+                                @foreach ($diskusi->comments as $commen)
+                                    @if ($commen->senderUser_id == null)
+                                        <div class="flex justify-end items-start gap-2.5">
+                                            <div
+                                                class="flex flex-col w-full max-w-[320px] leading-1.5 p-4 border-gray-200 bg-gray-100 rounded-r-xl">
+                                                <div class="flex items-center space-x-2 rtl:space-x-reverse">
+                                                    <span class="text-sm font-semibold text-gray-900">{{ $commen->pegawai == null ? '' : $commen->pegawai->name }}</span>
+                                                    <span class="text-sm font-normal text-gray-500">{{ \Carbon\Carbon::parse($commen['created_at'])->format('H:i, d M Y') }}</span>
+                                                </div>
+                                                <p class="text-sm font-normal py-2.5 text-gray-900">{{ $commen->comment }}</p>
+                                            </div>
+                                        </div>
+                                    @else
+                                        <div class="flex justify-start items-end gap-2.5">
+                                            <div
+                                                class="flex flex-col w-full max-w-[320px] leading-1.5 p-4 border-gray-200 bg-gray-100 rounded-l-xl">
+                                                <div class="flex items-center space-x-2 rtl:space-x-reverse">
+                                                    <span
+                                                        class="text-sm font-semibold text-gray-900">{{ $commen->user == null ? '' : $commen->user->name }}</span>
+                                                    <span class="text-sm font-normal text-gray-500">{{ \Carbon\Carbon::parse($commen['created_at'])->format('H:i, d M Y') }}</span>
+                                                </div>
+                                                <p class="text-sm font-normal py-2.5 text-gray-900">{{ $commen->comment }}</p>
+                                            </div>
+                                        </div>
+                                    @endif
+                                @endforeach
+                            @endauth
+                            @auth('web')
+                                @foreach ($diskusi->comments as $commen)
+                                    @if ($commen->senderUser_id == null)
+                                        <div class="flex justify-start items-start gap-2.5">
+                                            <div
+                                                class="flex flex-col w-full max-w-[320px] leading-1.5 p-4 border-gray-200 bg-gray-100 rounded-r-xl">
+                                                <div class="flex items-center space-x-2 rtl:space-x-reverse">
+                                                    <span class="text-sm font-semibold text-gray-900">{{ $commen->pegawai == null ? '' : $commen->pegawai->name }}</span>
+                                                    <span class="text-sm font-normal text-gray-500">{{ \Carbon\Carbon::parse($commen['created_at'])->format('H:i, d M Y') }}</span>
+                                                </div>
+                                                <p class="text-sm font-normal py-2.5 text-gray-900">{{ $commen->comment }}</p>
+                                            </div>
+                                        </div>
+                                    @else
+                                        <div class="flex justify-end items-end gap-2.5">
+                                            <div
+                                                class="flex flex-col w-full max-w-[320px] leading-1.5 p-4 border-gray-200 bg-gray-100 rounded-l-xl">
+                                                <div class="flex items-center space-x-2 rtl:space-x-reverse">
+                                                    <span
+                                                        class="text-sm font-semibold text-gray-900">{{ $commen->user == null ? '' : $commen->user->name }}</span>
+                                                    <span class="text-sm font-normal text-gray-500">{{ \Carbon\Carbon::parse($commen['created_at'])->format('H:i, d M Y') }}</span>
+                                                </div>
+                                                <p class="text-sm font-normal py-2.5 text-gray-900">{{ $commen->comment }}</p>
+                                            </div>
+                                        </div>
+                                    @endif
+                                @endforeach
+                            @endauth
+                        @else
+                            <p class="text-sm text-gray-500">Belum ada komentar.</p>
+                        @endif
+
+                        <form class="max-w-sm mx-auto" action="{{ route('comment', $diskusi->id) }}" method="POST">
+                            @csrf
+                            <label for="message" class="block mb-2 text-sm font-medium text-gray-900 ">Your
+                                Comment</label>
+                            <textarea id="message" rows="4" name="comment"
+                                class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 "
+                                placeholder="Leave a comment..."></textarea>
+                    </div>
+                    <!-- Modal footer -->
+                    <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b ">
+                        <button data-modal-hide="small-modal" type="submit"
+                            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">Send</button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endforeach
+
+    {{-- schedule modal --}}
+    @foreach ($diskusis as $diskusi)
+        <div id="schedule-modal-{{ $diskusi->id }}" tabindex="-1"
+            class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+            <div class="relative w-full max-w-md max-h-full">
+                <!-- Modal content -->
+                <div class="relative bg-white rounded-lg shadow ">
+                    <!-- Modal header -->
+                    <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
+                        <h3 class="text-xl font-medium text-gray-900">
+                            Set Schedule
+                        </h3>
+                        <button type="button"
+                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+                            data-modal-hide="schedule-modal-{{ $diskusi->id }}">
+                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 14 14">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                            </svg>
+                            <span class="sr-only">Close modal</span>
+                        </button>
+                    </div>
+                    <!-- Modal body -->
+                    <form action="{{ route('update-date', $diskusi->id) }}" method="POST">
+                        @csrf
+                        <div class="p-2 md:p-5 space-y-4">
+                            <div class="mb-2">
+                                <input type="datetime-local" id="base-input" name="date"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            </div>
+                        </div>
+                        <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b ">
+                            <button data-modal-hide="small-modal" type="submit"
+                                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">Set</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endforeach
 
     <!-- Create modal -->
     <!-- Main modal -->
@@ -107,4 +370,26 @@
         </div>
     </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const modals = document.querySelectorAll('[data-modal-target]');
+
+            modals.forEach(function(modalTrigger) {
+                const modalId = modalTrigger.getAttribute('data-modal-target');
+                const modal = document.getElementById(modalId);
+
+                if (modal) {
+                    modalTrigger.addEventListener('click', function() {
+                        modal.classList.remove('hidden');
+                        modal.classList.add('block');
+                    });
+
+                    modal.querySelector('[data-modal-hide]').addEventListener('click', function() {
+                        modal.classList.remove('block');
+                        modal.classList.add('hidden');
+                    });
+                }
+            });
+        });
+    </script>
 @endsection

@@ -14,18 +14,8 @@ use App\Http\Controllers\SkillController;
 use App\Http\Controllers\TerminPembayaranController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\UserController;
+use App\Models\RincianJasa;
 use Illuminate\Support\Facades\Route;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
 
 Route::get('/', function () {
     return view('home');
@@ -59,7 +49,7 @@ Route::post('skill/store', [SkillController::class, 'storeSkill'])->name('store-
 Route::post('skill/update/{id}', [SkillController::class, 'updateSkill'])->name('update-skill');
 Route::post('skill/delete/{id}', [SkillController::class, 'deleteSkill'])->name('delete-skill');
 
-Route::get('dashboard/jasa', [JasaController::class, 'jasa'])->name('jasa');
+Route::get('dashboard/jasa/{id}', [JasaController::class, 'jasa'])->name('jasa');
 Route::get('jasa/create', [JasaController::class, 'createJasa'])->name('create-jasa');
 Route::post('jasa/store', [JasaController::class, 'storeJasa'])->name('store-jasa');
 Route::post('jasa/update/{id}', [JasaController::class, 'updateJasa'])->name('update-jasa');
@@ -70,6 +60,7 @@ Route::get('rincian/create', [RincianJasaController::class, 'createRincian'])->n
 Route::post('rincian/store', [RincianJasaController::class, 'storeRincian'])->name('store-rincian');
 Route::post('rincian/update/{id}', [RincianJasaController::class, 'updateRincian'])->name('update-rincian');
 Route::post('rincian/delete/{id}', [RincianJasaController::class, 'deleteRincian'])->name('delete-rincian');
+Route::get('get-sub-services/{id}', [RincianJasaController::class, 'getSubServices'])->name('get-sub-service');
 
 Route::get('detail/create', [JasaController::class, 'createDetailJasa'])->name('detail-jasa');
 Route::post('detail/store', [JasaController::class, 'storeDetailJasa'])->name('store-detail-jasa');
@@ -100,6 +91,9 @@ Route::post('/diskusi/store', [DiskusiController::class, 'store'])->name('store-
 Route::get('/diskusi/room/{room}', [DiskusiController::class, 'room'])->name('room-diskusi');
 Route::get('/diskusi/get/{room}', [DiskusiController::class, 'getChat'])->name('get-diskusi');
 Route::post('/diskusi/send', [DiskusiController::class, 'sendChat'])->name('send-diskusi');
+Route::post('/diskusi/updateDate/{id}', [DiskusiController::class, 'updateDate'])->name('update-date');
+Route::post('/diskusi/comment/{id}', [DiskusiController::class, 'comment'])->name('comment');
+Route::post('/diskusi/agree/{id}', [DiskusiController::class, 'accDiscussion'])->name('acc-discussion');
 
 Route::get('payment/index', [TerminPembayaranController::class, 'index'])->name('index-termin');
 Route::get('user/payment', [TerminPembayaranController::class, 'userIndex'])->name('user-termin');

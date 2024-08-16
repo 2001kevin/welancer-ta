@@ -15,11 +15,11 @@ use Illuminate\Http\Request;
 
 class JasaController extends Controller
 {
-    public function jasa(){
+    public function jasa($id){
         $detailPakets = DetailPaket::all();
         $paketJasas = paketJasa::all();
         $kategoris = Kategori::all();
-        $jasas = Jasa::all();
+        $jasas = Jasa::where('kategori_id', $id)->get();
         $detailJasas = DetailJasa::all();
         $skills = skill::all();
         $rincians = RincianJasa::all();
@@ -127,7 +127,7 @@ class JasaController extends Controller
             'pegawai_id' => $request->pegawai,
         ]);
         toast('Service Detail Created Successfully!','success');
-        return redirect(route('jasa'));
+        return redirect()->back();
     }
 
     public function updateDetailJasa(Request $request, $id){

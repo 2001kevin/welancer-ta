@@ -31,12 +31,40 @@ html, body {
   background-color: #4640DE;
 }
 
+.button-comment{
+  padding: 5px 9px;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  background-color: #facc15;
+}
+
+.button-comment:hover{
+  padding: 5px 9px;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  background-color: #eab308;
+}
+
 .button-detail{
   padding: 5px 9px;
   color: white;
   border: none;
   border-radius: 12px;
   background-color: #3b82f6;
+}
+
+.button-group{
+  padding: 5px 9px;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  background-color: #17c098;
+}
+
+.button-group:hover{
+  background-color: #139678;
 }
 
 .button-detail:hover{
@@ -47,6 +75,9 @@ html, body {
     background-color: #4640DE;
 }
 
+#sub-service{
+    display: none;
+}
 
 .button-submit{
   padding: 5px 9px;
@@ -77,17 +108,7 @@ html, body {
   background-color: rgb(195, 5, 5);
 }
 
-.button-group{
-  padding: 2px 8px;
-  color: white;
-  border: none;
-  border-radius: 12px;
-  background-color: #17c098;
-}
 
-.button-group:hover{
-  background-color: #139678;
-}
 
 .title-welancer{
   font-weight: 650;

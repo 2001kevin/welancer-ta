@@ -11,19 +11,28 @@ class Diskusi extends Model
     protected $guarded = ['id'];
     protected $table = 'diskusis';
 
-    public function mappingGrup(){
+    public function mappingGrup()
+    {
         return $this->belongsTo(MappingGrup::class);
     }
 
-    public function users(){
+    public function users()
+    {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public function transaksis(){
+    public function transaksis()
+    {
         return $this->belongsTo(transaksi::class, 'transaksi_id', 'id');
     }
 
-    public function pegawais(){
+    public function pegawais()
+    {
         return $this->belongsTo(Pegawai::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'diskusi_id');
     }
 }

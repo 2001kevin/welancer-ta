@@ -23,6 +23,7 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script type="text/javascript" src="https://app.sandbox.midtrans.com/snap/snap.js"
         data-client-key="{{ config('midtrans.client_key') }}"></script>
+
     <title>Dashboard</title>
 </head>
 
@@ -106,7 +107,7 @@
                         </svg>
                         <span>Service Package</span>
                     </a>
-                    <a href="{{ route('jasa') }}"
+                    {{-- <a href="{{ route('jasa') }}"
                         class="sidebar-item {{ Request::is('dashboard/jasa', 'jasa/create') ? 'active' : '' }}"
                         onclick="toggleActive(this)">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -125,7 +126,7 @@
                                 stroke="#ABB3C4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
                         <span>Services</span>
-                    </a>
+                    </a> --}}
                     <h5 class="sidebar-title ">Transaction</h5>
                     <a href="{{ route('index-transaksi-admin') }}"
                         class="sidebar-item {{ Request::is('transaksi/indexAdmin') ? 'active' : '' }}"
@@ -286,7 +287,7 @@
                                 d="M9 11C11.2091 11 13 9.20914 13 7C13 4.79086 11.2091 3 9 3C6.79086 3 5 4.79086 5 7C5 9.20914 6.79086 11 9 11Z"
                                 stroke="#ABB3C4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
-                        <span>Services</span>
+                        <span>History</span>
                     </a>
                     {{-- <h5 class="sidebar-title ">Group</h5>
                     <a href="{{ route('index-grup') }}" class="sidebar-item " onclick="toggleActive(this)">
@@ -378,7 +379,9 @@
                     @yield('main')
                 </div>
             </div>
+                <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
                 integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous">
             </script>

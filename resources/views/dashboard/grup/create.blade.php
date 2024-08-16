@@ -37,6 +37,9 @@
                                             <h1 class=""><strong><span
                                                         class="capitalize">{{ $detailTransaksi->jasa->nama }}</span>
                                                     Service</strong></h1>
+                                            @foreach ($detailTransaksi->detailTransaksiJasas as $detailTransaksiJasa)
+                                                <p class="font-semibold text-slate-500">{{ $detailTransaksiJasa->rincianJasa->nama }}</p>
+                                            @endforeach
                                         </div>
                                         <input type="text" value="{{ $detailTransaksi->id }}" class="hidden" name="detail_transaksi_id">
                                         <div class="mb-2">
@@ -50,8 +53,8 @@
                                         <div class="mt-2">
                                             <select class="js-example-basic-single w-full py-4" name="pegawai[]">
                                                 <option>Choose Employee</option>
-                                                @foreach ($pegawais as $pegawai)
-                                                    <option value="{{ $pegawai->id }}">{{ $pegawai->name }}</option>
+                                                @foreach ($detailTransaksiJasa->rincianJasa->detailJasa as $detailJas)
+                                                    <option value="{{ $detailJas->pegawai->id }}">{{ $detailJas->pegawai->name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>

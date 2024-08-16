@@ -29,6 +29,11 @@ class Pegawai extends Model implements Authenticatable
         return $this->hasMany(Diskusi::class);
     }
 
+    public function comment()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
     // public function getAuthIdentifierName() {
     //     return 'id';
     // }

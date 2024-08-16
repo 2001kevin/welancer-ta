@@ -18,4 +18,21 @@ class RincianJasa extends Model
     public function detailJasa(){
         return $this->hasMany(DetailJasa::class);
     }
+
+    // protected static function booted()
+    // {
+    //     static::saved(function ($rincianJasa) {
+    //         $jasa = $rincianJasa->jasa;
+    //         $jasa->min_price = $jasa->rincian_jasa->min('harga');
+    //         $jasa->max_price = $jasa->rincian_jasa->max('harga');
+    //         $jasa->save();
+    //     });
+
+    //     static::deleted(function ($rincianJasa) {
+    //         $jasa = $rincianJasa->jasa;
+    //         $jasa->min_price = $jasa->rincianJasa()->min('harga');
+    //         $jasa->max_price = $jasa->rincianJasa()->max('harga');
+    //         $jasa->save();
+    //     });
+    // }
 }

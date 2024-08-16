@@ -25,7 +25,7 @@ class TerminPembayaranController extends Controller
     }
 
     public function index(){
-        $termins = TerminPembayaran::all();
+        $termins = TerminPembayaran::orderBy('created_at', 'desc')->get();
         return view('dashboard.payment.index', compact('termins'));
     }
 
@@ -110,7 +110,7 @@ class TerminPembayaranController extends Controller
             $termin->save();
         }
 
-        $termin_next = TerminPembayaran::find($termin_id_next);
+        $termin_next = TerminPembayaran::find($termin_id_next)->first();
         $termin_next->status_termin = 'payable';
         $termin_next->save();
 

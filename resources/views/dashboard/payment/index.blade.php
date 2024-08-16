@@ -37,6 +37,7 @@
                                     </td>
                                 @endif
                                 {{-- @can('isSuperAdmin') --}}
+
                                 <td>
                                     <div class="align-items-center gap-2">
                                         <button data-modal-target="detail-modal-{{ $termin->id }}"

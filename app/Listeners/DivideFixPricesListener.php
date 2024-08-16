@@ -31,9 +31,12 @@ class DivideFixPricesListener
     public function handle(FixPricesUpdated $event)
     {
         $transaction = $event->transaction;
+        $persenTermin = $event->persenTermin;
+        $firstTermin = $transaction->fix_price * $persenTermin;
 
         // Hitung nilai per termin
-        $pricePerTerm = $transaction->fix_price / 3;
+        $pricePerTerm = $transaction->fix_price - $firstTermin;
+        $fixPriceDivided = $pricePerTerm/2;
 
         // Ambil tanggal updated_at
         $updatedAt = Carbon::parse($transaction->updated_at);
@@ -43,7 +46,7 @@ class DivideFixPricesListener
             if($i == 1){
                 TerminPembayaran::create([
                     'transaksi_id' => $transaction->id,
-                    'jumlah_pembayaran' => $pricePerTerm,
+                    'jumlah_pembayaran' => $firstTermin,
                     'tanggal_termin' => $updatedAt->copy()->addMonths($i), // Tanggal termin ditambah setiap bulan
                     'status_pembayaran' => 'Waiting Payment',
                     'status_termin' => 'payable',
@@ -51,7 +54,7 @@ class DivideFixPricesListener
             }else{
                 TerminPembayaran::create([
                     'transaksi_id' => $transaction->id,
-                    'jumlah_pembayaran' => $pricePerTerm,
+                    'jumlah_pembayaran' => $fixPriceDivided,
                     'tanggal_termin' => $updatedAt->copy()->addMonths($i), // Tanggal termin ditambah setiap bulan
                     'status_pembayaran' => 'Waiting Payment',
                     'status_termin' => 'not payable',

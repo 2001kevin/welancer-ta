@@ -20,7 +20,7 @@ class Jasa extends Model
     }
 
     public function rincian_jasa(){
-        return $this->hasMany(RincianJasa::class);
+        return $this->hasMany(RincianJasa::class, 'jasa_id');
     }
 
     public function detail_transaksi(){

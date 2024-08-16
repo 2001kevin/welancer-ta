@@ -26,8 +26,7 @@
                     Price Range :
                 </p>
                 <p class="font-medium">{{ $room->transaksis->jumlah_harga }}</p>
-                <button type="button" data-modal-target="crud-modal"
-                    data-modal-toggle="crud-modal"
+                <button type="button" data-modal-target="crud-modal" data-modal-toggle="crud-modal"
                     class=" mt-4 w-100 text-white bg-[#5932ea] hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none">Update</button>
             </div>
         </div>
@@ -37,7 +36,7 @@
             </div>
             <form id="form">
                 <nav class="navbar bg-white navbar-expand-sm d-flex justify-content-between px-2">
-                    <input type="text number" name="text" class="form-control" placeholder="Type a message...">
+                    <input type="text number" name="pesan" class="form-control" placeholder="Type a message...">
                     <div class="icondiv d-flex justify-content-end align-content-center text-center ml-2"> <i
                             class="fa fa-arrow-circle-right icon2"></i> </div>
                 </nav>
@@ -77,6 +76,17 @@
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 "
                                     placeholder="fix price" required="">
                             </div>
+                            <label for="website-admin"
+                                class="block mb-2 text-sm font-medium text-gray-900">First Termin</label>
+                            <div class="flex mb-2">
+                                <span
+                                    class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-e-0 border-gray-300 rounded-s-md">
+                                   <i class="fa-solid fa-percent"></i>
+                                </span>
+                                <input type="number" id="website-admin" oninput="validity.valid||(value='');" name="termin"
+                                    class="rounded-none rounded-e-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm p-2.5"
+                                    placeholder="First Termin">
+                            </div>
                             <div class="mb-3">
                                 <label for="status" class="block mb-2 text-sm font-medium text-gray-900 ">Select
                                     Status</label>
@@ -88,7 +98,7 @@
                                     <option {{ $room->transaksis->status == 'Waiting for Payment' ? 'selected' : '' }}
                                         value="Waiting for Payment">Waiting for Payment</option>
                                     <option {{ $room->transaksis->status == 'On Progress' ? 'selected' : '' }}
-                                        value="On Progress">On Proress</option>
+                                        value="On Progress">On Progres</option>
                                     <option {{ $room->transaksis->status == 'Finish' ? 'selected' : '' }} value="Finish">
                                         Finish
                                     </option>
@@ -202,7 +212,7 @@
                 document.getElementById('form').addEventListener('submit', async (ev) => {
                     ev.preventDefault()
 
-                    const message = document.querySelector('input[name="text"]')
+                    const message = document.querySelector('input[name="pesan"]')
                     const response = await fetch('/diskusi/send', {
                         method: 'POST',
                         headers: {
