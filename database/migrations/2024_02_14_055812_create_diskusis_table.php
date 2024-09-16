@@ -23,6 +23,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('transaksi_id')->references('id')->on('transaksis')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
+            $table->dateTime('deleted_at')->nullable();
         });
     }
 

@@ -39,7 +39,7 @@ class Authentication extends Controller
         ]);
         $user->save();
         toast('Registrasi Sukses!','success');
-        return redirect()->route('loginp')->with('success', 'Registration success, Please Login!');
+        return redirect()->route('login')->with('success', 'Registration success, Please Login!');
     }
 
     public function loginAdmin(Request $request){

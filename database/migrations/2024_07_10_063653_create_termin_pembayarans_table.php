@@ -20,7 +20,7 @@ return new class extends Migration
             $table->decimal('jumlah_pembayaran');
             $table->string('status_pembayaran');
             $table->timestamps();
-
+            $table->dateTime('deleted_at')->nullable();
             $table->foreign('transaksi_id')->references('id')->on('transaksis');
         });
     }

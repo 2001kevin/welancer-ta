@@ -12,7 +12,7 @@ class MappingSubGrup extends Model
     protected $table = 'mapping_sub_grups';
 
     public function mapping_grups(){
-        return $this->belongsTo(MappingGrup::class);
+        return $this->belongsTo(MappingGrup::class, 'mapping_grup_id', 'id');
     }
 
     public function detailTransaksi(){
@@ -25,5 +25,9 @@ class MappingSubGrup extends Model
 
     public function pegawai(){
         return $this->belongsTo(Pegawai::class);
+    }
+
+    public function projects(){
+        return $this->hasMany(Project::class);
     }
 }

@@ -160,8 +160,7 @@
                         error: function(jqXHR, textStatus, errorThrown) {
                             console.error("Error fetching payment token: ", textStatus,
                                 errorThrown);
-                            $('#' + snapContainer).html('<p>Error: ' + response.error +
-                                '</p>');
+
                         }
                     });
                 });

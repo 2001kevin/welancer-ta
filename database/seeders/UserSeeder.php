@@ -20,6 +20,13 @@ class UserSeeder extends Seeder
             'email' => 'aldi@gmail.com',
             'alamat' => 'Jl. gunung merapi',
             'password' => bcrypt('123456'),
-        ]);
+        ],
+        [
+                'name' => 'kevin',
+                'email' => 'silahisabungan7@gmail.com',
+                'alamat' => 'Jl. gunung merapi',
+                'password' => bcrypt('123456'),
+        ]
+    );
     }
 }

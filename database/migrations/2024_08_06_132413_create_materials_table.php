@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('link');
             $table->unsignedBigInteger('detail_transaksi_id');
             $table->timestamps();
-
+            $table->dateTime('deleted_at')->nullable();
             $table->foreign('detail_transaksi_id')->references('id')->on('detail_transaksis');
         });
     }

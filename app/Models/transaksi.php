@@ -12,9 +12,15 @@ class transaksi extends Model
 
     protected $guarded = ['id'];
     protected $table = 'transaksis';
+    protected $casts = ['rincian' => 'array'];
 
     public function detail_transaksi(){
         return $this->hasMany(DetailTransaksi::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function pegawai(){

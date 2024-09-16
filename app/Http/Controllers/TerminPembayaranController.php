@@ -32,7 +32,7 @@ class TerminPembayaranController extends Controller
     public function userIndex(){
         $user_id = Auth::user()->id;
         $transaksis = transaksi::where('user_id', $user_id)->pluck('id');
-        $termins = TerminPembayaran::whereIn('transaksi_id', $transaksis)->get();
+        $termins = TerminPembayaran::orderBy('created_at', 'desc')->whereIn('transaksi_id', $transaksis)->get();
         // dd($termins);
         return view('dashboard.payment.userIndex', compact('termins'));
     }
@@ -104,13 +104,38 @@ class TerminPembayaranController extends Controller
         if (in_array($transactionDetails['transaction_status'], ['capture', 'settlement'])) {
             $termin->status_pembayaran = 'Payment Succesfull';
             $termin->status_termin = 'not payable';
+            $transaksi_id = $termin->transaksi_id;
             $termin->save();
+            
+            $transaksi = transaksi::find($transaksi_id);
+            // Ambil rincian termin dan hitung jumlahnya
+            $rincian_termin = json_decode($transaksi->rincian_termin); // Asumsikan dalam bentuk array JSON
+            $jumlah_termin = count($rincian_termin);
+
+            // Buat status dinamis sesuai dengan jumlah termin
+            for ($i = 1; $i <= $jumlah_termin; $i++) {
+                if ($transaksi->status == 'Waiting for Payment' && $i == 1) {
+                    $transaksi->status = 'Termin ' . $i . ' Completed';
+                    $transaksi->save();
+                    break;
+                } elseif ($transaksi->status == 'Termin ' . ($i - 1) . ' Completed' && $i > 1) {
+                    $transaksi->status = 'Termin ' . $i . ' Completed';
+                    $transaksi->save();
+                    break;
+                }
+            }
+
+            // Jika semua termin sudah selesai, set status menjadi "All Payment Completed"
+            if ($transaksi->status == 'Termin ' . $jumlah_termin . ' Completed') {
+                $transaksi->status = 'All Payment Completed';
+                $transaksi->save();
+            }
         } else {
             $termin->status_pembayaran = 'Payment Pending';
             $termin->save();
         }
 
-        $termin_next = TerminPembayaran::find($termin_id_next)->first();
+        $termin_next = TerminPembayaran::find($termin_id_next);
         $termin_next->status_termin = 'payable';
         $termin_next->save();
 

@@ -24,9 +24,11 @@
                         <td>{{ $kategori->nama }}</td>
                         <td>{{ $kategori->deskripsi }}</td>
                         <td>
-                            <button class="button-group"><a class="text-white" href="{{ route('jasa', $kategori->id) }}"><i class="fa-regular fa-folder-open"></i></a></button>
-                            <button class="button-edit" data-bs-toggle="modal" data-bs-target="#updateKategori-{{ $kategori->id }}"><i class="fas fa-pencil-alt"></i></button>
-                            <button class="button-delete"><i class="fas fa-times" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ $kategori->id }}"></i></button>
+                            <div class="flex gap-2">
+                                <button class="button-group"><a class="text-white" href="{{ route('jasa', $kategori->id) }}"><i class="fa-regular fa-folder-open"></i></a></button>
+                                <button class="button-edit" data-bs-toggle="modal" data-bs-target="#updateKategori-{{ $kategori->id }}"><i class="fas fa-pencil-alt"></i></button>
+                                <button class="button-delete"><i class="fas fa-times" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ $kategori->id }}"></i></button>
+                            </div>
                         </td>
                     </tr>
                 @endforeach

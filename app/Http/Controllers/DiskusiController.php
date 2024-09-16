@@ -13,6 +13,8 @@ use App\Models\DetailDiskusi;
 use App\Models\DetailTransaksi;
 use App\Models\MappingSubGrup;
 use App\Models\User;
+use App\Models\Pegawai;
+use App\Models\TerminPembayaran;
 
 class DiskusiController extends Controller
 {
@@ -21,16 +23,29 @@ class DiskusiController extends Controller
         if (auth()->check()) {
             $userId = auth()->id();
             $grups = MappingGrup::whereHas('mapping_sub_grups')->get();
-            $diskusis = Diskusi::with(['comments'])->where('user_id', $userId)->whereNot('tanggal_diskusi', null)->orderBy('created_at', 'desc')->get();
+            $diskusis = Diskusi::with(['comments'])->where('user_id', $userId)->whereNot('tanggal_diskusi', null)->orderBy('id', 'desc')->get();
             // return $diskusis;
             // dd($diskusis[0]->comments);
             return view('dashboard.diskusi.room', compact('diskusis', 'grups'));
         } else {
-            $grups = MappingGrup::whereHas('mapping_sub_grups')->get();
-            $diskusis = Diskusi::with(['comments'])->orderBy('created_at', 'desc')->get();
-            $admin = auth()->guard('pegawai')->id();
-            // dd($diskusis);
-            return view('dashboard.diskusi.room', compact('diskusis', 'grups'));
+            $adminId = auth()->guard('pegawai')->id();
+            $role = Pegawai::where('id', $adminId)->value('role');
+            if($role == "freelancer"){
+                $grups = MappingGrup::whereHas('mapping_sub_grups')->where('pegawai_id', $adminId)->get();
+                $project_manager = MappingGrup::where('pegawai_id', $adminId)->exists();
+                $sub_grups = MappingSubGrup::where('pegawai_id', $adminId)->get();
+                $grup_pm = MappingGrup::where('pegawai_id', $adminId)->pluck('id');
+                $mapping_grup_ids = $sub_grups->pluck('mapping_grup_id');
+                $diskusis = Diskusi::with(['comments'])->whereIn('mapping_grup_id', $mapping_grup_ids)->orderBy('id', 'desc')->get();
+                return view('dashboard.diskusi.room', compact('diskusis', 'grups', 'project_manager'));
+            }elseif($role == "superadmin"){
+                $grups = MappingGrup::whereHas('mapping_sub_grups')->get();
+                $project_manager = MappingGrup::where('pegawai_id', $adminId)->exists();
+
+                $diskusis = Diskusi::with(['comments'])->orderBy('id', 'desc')->get();
+                // dd($diskusis);
+                return view('dashboard.diskusi.room', compact('diskusis', 'grups', 'project_manager'));
+            }
         }
     }
 
@@ -75,6 +90,20 @@ class DiskusiController extends Controller
         }
     }
 
+    public function updateDiscussion(Request $request, $id)
+    {
+        $diskusi = Diskusi::find($id);
+        if ($diskusi) {
+                $diskusi->status = $request->status;
+                $diskusi->tanggal_diskusi = $request->date;
+                $success = $diskusi->save();
+                if ($success) {
+                    toast('Status Updated Successfully', 'success');
+                    return redirect(route('index-diskusi'));
+                }
+        }
+    }
+
     public function accDiscussion($id){
         $diskusi = Diskusi::find($id);
         if($diskusi){
@@ -85,6 +114,14 @@ class DiskusiController extends Controller
                 return redirect(route('index-diskusi'));
             }
         }
+    }
+
+    public function selectPayment($id){
+        $grup = MappingGrup::find($id);
+        $transaksi_id = $grup->transaksi_id;
+        $termin_pembayaran = TerminPembayaran::where('transaksi_id', $transaksi_id)
+                                ->where('status_pembayaran', 'Payment Succesfull')->get();
+        return response()->json($termin_pembayaran);
     }
 
     public function comment(Request $request, $id)
@@ -180,7 +217,7 @@ class DiskusiController extends Controller
                     $room = Diskusi::where('id', $id_diskusi)->first();
                     $id_transaksi = $room->transaksi_id;
                     $det_transaksi = DetailTransaksi::where('transaksi_id', $id_transaksi)->get();
-                    return view('dashboard.diskusi.chat', compact('room', 'id_pegawai_grup', 'target_id', 'det_transaksi'));
+                    return view('dashboard.diskusi.chat', compact('room', 'id_pegawai_grup', 'target_id', 'det_transaksi', 'mapping_grup'));
                 } else {
                     $my_id = auth()->id();
                     $user = User::find($my_id);
@@ -189,7 +226,7 @@ class DiskusiController extends Controller
                     $room = Diskusi::where('id', $id_diskusi)->first();
                     $id_transaksi = $room->transaksi_id;
                     $det_transaksi = DetailTransaksi::where('transaksi_id', $id_transaksi)->get();
-                    return view('dashboard.diskusi.chat', compact('room', 'my_id', 'target_id', 'nama_user', 'det_transaksi'));
+                    return view('dashboard.diskusi.chat', compact('room', 'my_id', 'target_id', 'nama_user', 'det_transaksi', 'mapping_grup'));
                 }
             } else {
                 // Tangani kasus jika tidak ada mapping_grup yang ditemukan

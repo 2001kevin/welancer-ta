@@ -17,11 +17,12 @@ return new class extends Migration
             $table->id();
             $table->string('nama');
             $table->string('deskripsi');
-            $table->decimal('min_price');
-            $table->decimal('max_price');
+            $table->decimal('min_price', 10, 2)->nullable();
+            $table->decimal('max_price', 10, 2)->nullable();
             $table->unsignedBigInteger('kategori_id');
             $table->foreign('kategori_id')->references('id')->on('kategoris')->onUpdate('cascade')->onDelete('cascade');;
             $table->timestamps();
+            $table->dateTime('deleted_at')->nullable();
         });
     }
 

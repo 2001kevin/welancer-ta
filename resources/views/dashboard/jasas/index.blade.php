@@ -152,6 +152,7 @@
                                 <td class="d-flex gap-2">
                                     <button class="button-edit" data-bs-toggle="modal" data-bs-target="#updateJasa-{{ $jasa->id }}"><i class="fas fa-pencil-alt"></i></button>
                                     <button class="button-delete"><i class="fas fa-times" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ $jasa->id }}"></i></button>
+                                    <button class="button-group"><a class="text-white" href=""><i class="fa-solid fa-ellipsis"></i></a></button>
                                 </td>
                             </tr>
                         @endforeach

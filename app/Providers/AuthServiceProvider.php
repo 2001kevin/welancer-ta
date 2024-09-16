@@ -27,9 +27,8 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Gate::define('isSuperAdmin', function (Pegawai $pegawai) {
-            // Cek jika user adalah instance dari Pegawai
-            return $pegawai->role == 'superadmin';
+        Gate::define('access-freelancer', function (Pegawai $pegawai) {
+            return $pegawai->role === 'freelancer';
         });
 
         Gate::define('isUser', function (User $user) {

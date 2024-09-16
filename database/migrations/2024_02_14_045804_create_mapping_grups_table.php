@@ -21,6 +21,7 @@ return new class extends Migration
             $table->foreign('pegawai_id')->references('id')->on('pegawais')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('transaksi_id')->references('id')->on('transaksis')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
+            $table->dateTime('deleted_at')->nullable();
         });
     }
 

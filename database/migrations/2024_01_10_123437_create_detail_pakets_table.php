@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreign('jasa_id')->references('id')->on('jasas')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('paket_jasa_id')->references('id')->on('paket_jasas')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
+            $table->dateTime('deleted_at')->nullable();
         });
     }
 

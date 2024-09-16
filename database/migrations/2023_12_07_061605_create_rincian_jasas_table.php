@@ -17,8 +17,12 @@ return new class extends Migration
             $table->id();
             $table->string('nama');
             $table->unsignedBigInteger('jasa_id');
+            $table->decimal('unit');
+            $table->string('tipe_unit');
+            $table->decimal('harga', 10,2);
             $table->foreign('jasa_id')->references('id')->on('jasas')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
+            $table->dateTime('deleted_at')->nullable();
         });
     }
 

@@ -13,7 +13,7 @@
               <tr>
                 <th scope="col">No</th>
                 <th scope="col">Name</th>
-                <th scope="col">description</th>
+                <th scope="col">Description</th>
                 <th scope="col">Action</th>
               </tr>
             </thead>
@@ -24,7 +24,7 @@
                         <td>{{ $skill->nama }}</td>
                         <td>{{ $skill->deskripsi }}</td>
                         <td class="d-flex gap-2">
-                            <button class="button-edit" data-bs-toggle="modal" data-bs-target="#updateSkill-{{ $skill->id }}"><i class="fas fa-pencil-alt"></i></button>
+                            <button class="button-edit" data-modal-toggle="update-modal-{{ $skill->id }}" data-modal-target="update-modal-{{ $skill->id }}"><i class="fas fa-pencil-alt"></i></button>
                             <button class="button-delete"><i class="fas fa-times" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ $skill->id }}"></i></button>
                         </td>
                     </tr>
@@ -33,49 +33,43 @@
           </table>
         </div>
       </div>
-      
+
       @foreach ($skills as $skill)
           <!-- update -->
-            <div class="modal fade" id="updateSkill-{{ $skill->id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog modal-xl">
-                <div class="modal-content">
-                <div class="modal-header">
-                    <div class="d-flex align-items-center">
-                        <img src="{{ asset('images/LOGO.png') }}" alt="Welancer">
-                        <span class="title-welancer ms-3">Welancer </span>
+        <div id="update-modal-{{ $skill->id }}" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+            <div class="relative p-4 w-full max-w-md max-h-full">
+                <!-- Modal content -->
+                <div class="relative bg-white rounded-lg shadow">
+                    <!-- Modal header -->
+                    <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
+                        <h3 class="text-xl font-semibold text-gray-900">
+                            Update Skill Data
+                        </h3>
+                        <button type="button" class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-hide="update-modal-{{ $skill->id }}">
+                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                            </svg>
+                            <span class="sr-only">Close modal</span>
+                        </button>
                     </div>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                    <div class="container">
-                        <div class="row justify-content-center">
-                            <div class="col-md-10">
-                                <div class="card mb-4 mx-4 mt-4 shadow-lg border-0">
-                                    <div class="card-body py-5 px-5">
-                                        <div class="text-center">
-                                            <h1><strong>Update Data Skill</strong></h1>
-                                        </div>
-                                        <form action="{{ route('update-skill', $skill->id) }}" method="POST" class="row sign-up-form form g-3" enctype="multipart/form-data">
-                                            @csrf
-                                                <div class="col-md-6">
-                                                <label for="Name" class="form-label">Name</label>
-                                                <input type="text" class="form-control" placeholder="Name" name="nama" id="name" value="{{ $skill->nama }}" required>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label for="Description" class="form-label">Description</label>
-                                                <input type="text" placeholder="Description" name="deskripsi" class="form-control" id="name" value="{{ $skill->deskripsi }}"  required>
-                                            </div>
-                                            <div class="col d-grid gap-2 purple button-submit">
-                                                <button type="submit">Submit</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
+                    <!-- Modal body -->
+                    <div class="p-4 md:p-5">
+                        <form class="space-y-4" action="{{ route('update-skill', $skill->id) }}" method="POST">
+                            @csrf
+                            <div>
+                                <label for="nama" class="block mb-2 text-sm font-medium text-gray-900">Name</label>
+                                <input type="text" name="nama" id="nama" value="{{ old('nama', $skill->nama) }}" old class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="skill name" required />
                             </div>
-                        </div>
+                            <div>
+                                <label for="deskripsi" class="block mb-2 text-sm font-medium text-gray-900">Description</label>
+                                <textarea type="text" name="deskripsi" id="deskripsi" placeholder="skill description" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required >{{ old('deskripsi', $skill->deskripsi) }}</textarea>
+                            </div>
+                            <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Submit</button>
+                        </form>
                     </div>
                 </div>
             </div>
-            </div>
+        </div>
         @endforeach
         @foreach ($skills as $skill)
           <!-- Modal Delete -->
@@ -110,4 +104,22 @@
                 </div>
             </div>
         @endforeach
+        @section('scripts')
+        @if (session('error_list'))
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Validation Errors',
+                        html: `{!! session('error_list') !!}`,
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 5000,
+                        timerProgressBar: true,
+                    });
+                });
+            </script>
+        @endif
+    @endsection
 @endsection

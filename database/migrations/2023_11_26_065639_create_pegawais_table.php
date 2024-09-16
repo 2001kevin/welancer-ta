@@ -24,6 +24,7 @@ return new class extends Migration
             $table->rememberToken();
             $table->enum('role', ['admin', 'superadmin', 'freelancer'])->default('admin');
             $table->timestamps();
+            $table->dateTime('deleted_at')->nullable();
         });
     }
 

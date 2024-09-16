@@ -42,4 +42,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Comment::class);
     }
+
+    public function transaksi()
+    {
+        return $this->hasMany(transaksi::class);
+    }
 }

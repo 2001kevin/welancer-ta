@@ -22,12 +22,23 @@
                     <span
                         class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">{{ $det->jasa->nama }}</span>
                 @endforeach
-                <p class="font-bold mb-2 mt-3">
-                    Price Range :
-                </p>
-                <p class="font-medium">{{ $room->transaksis->jumlah_harga }}</p>
-                <button type="button" data-modal-target="crud-modal" data-modal-toggle="crud-modal"
-                    class=" mt-4 w-100 text-white bg-[#5932ea] hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none">Update</button>
+
+                @if ($room->transaksis->fix_price !== null)
+                    <p class="font-bold mb-2 mt-3">
+                        Fix Price :
+                    </p>
+                    <p class="font-medium">Rp {{ number_format($room->transaksis->fix_price, 2) }}</p>
+                @else
+                    <p class="font-bold mb-2 mt-3">
+                        Price Range :
+                    </p>
+                    <p class="font-medium">{{ $room->transaksis->jumlah_harga }}</p>
+                @endif
+                @if(Auth::guard('pegawai')->id() == $mapping_grup->pegawai_id)
+                    <button type="button" data-modal-target="crud-modal" data-modal-toggle="crud-modal"
+                        class=" mt-4 w-100 text-white bg-[#5932ea] hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none">Update</button>
+                @else
+                @endif
             </div>
         </div>
 

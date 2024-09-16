@@ -23,6 +23,7 @@ return new class extends Migration
             $table->foreign('senderPegawai_id')->references('id')->on('pegawais');
             $table->foreign('diskusi_id')->references('id')->on('diskusis');
             $table->timestamps();
+            $table->dateTime('deleted_at')->nullable();
         });
     }
 

@@ -25,6 +25,7 @@ return new class extends Migration
             $table->foreign('detail_transaksi_id')->references('id')->on('detail_transaksis');
             $table->foreign('pegawai_id')->references('id')->on('pegawais');
             $table->timestamps();
+            $table->dateTime('deleted_at')->nullable();
         });
     }
 

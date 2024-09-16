@@ -9,10 +9,13 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\JasaController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\PaketJasaController;
+use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\RincianJasaController;
 use App\Http\Controllers\SkillController;
 use App\Http\Controllers\TerminPembayaranController;
 use App\Http\Controllers\TransaksiController;
+use App\Http\Controllers\CommentProjectController;
+use App\Http\Controllers\SettingTerminController;
 use App\Http\Controllers\UserController;
 use App\Models\RincianJasa;
 use Illuminate\Support\Facades\Route;
@@ -94,8 +97,20 @@ Route::post('/diskusi/send', [DiskusiController::class, 'sendChat'])->name('send
 Route::post('/diskusi/updateDate/{id}', [DiskusiController::class, 'updateDate'])->name('update-date');
 Route::post('/diskusi/comment/{id}', [DiskusiController::class, 'comment'])->name('comment');
 Route::post('/diskusi/agree/{id}', [DiskusiController::class, 'accDiscussion'])->name('acc-discussion');
+Route::post('/diskusi/update/{id}', [DiskusiController::class, 'updateDiscussion'])->name('update-discussion');
+Route::get('/selectPayment/{id}', [DiskusiController::class, 'selectPayment'])->name('select-payment');
 
 Route::get('payment/index', [TerminPembayaranController::class, 'index'])->name('index-termin');
 Route::get('user/payment', [TerminPembayaranController::class, 'userIndex'])->name('user-termin');
 Route::get('payment/pay', [TerminPembayaranController::class, 'createTransaction'])->name('pay-termin');
 Route::get('payment/success', [TerminPembayaranController::class, 'successTermin'])->name('success-termin');
+
+Route::get('/project', [ProjectController::class, 'index'])->name('project-index');
+Route::get('/project/{id}', [ProjectController::class, 'project'])->name('project');
+Route::post('/project/comment/{id}', [CommentProjectController::class, 'comment'])->name('comment-project');
+Route::get('project/detail/{id}', [ProjectController::class, 'detailProject'])->name('detail-project');
+Route::post('/project/update/{id}', [ProjectController::class, 'updateLink'])->name('input-project');
+
+Route::get('/setting/termin', [SettingTerminController::class, 'index'])->name('setting-termin');
+Route::post('/setting/store', [SettingTerminController::class, 'store'])->name('setting-store');
+Route::post('/setting/update/{id}', [SettingTerminController::class, 'update'])->name('setting-update');

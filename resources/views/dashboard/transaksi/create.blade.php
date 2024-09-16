@@ -110,9 +110,13 @@
                         materialLinkForm.innerHTML = `
                         <div class="card-body">
                             <h3><strong>Material Links for ${parentServiceName}</strong></h3>
-                            <div class="mb-3">
+                            <div class="mb-1 mt-3">
                                 <label for="material-link-${serviceId}" class="form-label">Material Link</label>
                                 <input type="url" name="material_links[]" class="block w-full p-2 text-gray-900 border border-gray-500 rounded-lg bg-white text-xs focus:ring-blue-500 focus:border-blue-500" id="material-link-${serviceId}" placeholder="Enter material link" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="material-description-${serviceId}" class="form-label">Material Description</label>
+                                <textarea type="text" name="material_desc[]" class="block p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" id="material-description-${serviceId}" placeholder="Enter material description" required></textarea>
                             </div>
                         </div>
                     `;

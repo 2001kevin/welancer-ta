@@ -8,6 +8,10 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 use Illuminate\Support\Facades\Event;
 use App\Events\FixPricesUpdated;
 use App\Listeners\DivideFixPricesListener;
+use App\Events\RincianJasaCreated;
+use App\Listeners\UpdateJasaPrice;
+use App\Events\TransactionCreated;
+use App\Listeners\GenerateTermins;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -19,6 +23,14 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         FixPricesUpdated::class => [
             DivideFixPricesListener::class,
+        ],
+
+        RincianJasaCreated::class => [
+            UpdateJasaPrice::class,
+        ],
+
+        TransactionCreated::class => [
+            GenerateTermins::class,
         ],
     ];
 

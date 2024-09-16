@@ -22,6 +22,7 @@ return new class extends Migration
             $table->foreign('rincian_jasa_id')->references('id')->on('rincian_jasas')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('pegawai_id')->references('id')->on('pegawais')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
+            $table->dateTime('deleted_at')->nullable();
         });
     }
 

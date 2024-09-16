@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Events\RincianJasaCreated;
 
 class RincianJasa extends Model
 {
@@ -12,7 +13,7 @@ class RincianJasa extends Model
     protected $table = 'rincian_jasas';
 
     public function jasa(){
-        return $this->belongsTo(Jasa::class);
+        return $this->belongsTo(Jasa::class, 'jasa_id', 'id');
     }
 
     public function detailJasa(){
@@ -35,4 +36,13 @@ class RincianJasa extends Model
     //         $jasa->save();
     //     });
     // }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($rincianJasa) {
+            event(new RincianJasaCreated($rincianJasa));
+        });
+    }
 }

@@ -46,14 +46,14 @@ class RincianJasaController extends Controller
             'harga' => $request->harga,
             'jasa_id' => $request->jasa
         ]);
-        $jasa = Jasa::find($request->jasa); // Ganti 1 dengan ID Jasa yang ingin diperbarui
+        // $jasa = Jasa::find($request->jasa); // Ganti 1 dengan ID Jasa yang ingin diperbarui
 
-        $minPrice = $jasa->rincian_jasa->min('harga');
-        $maxPrice = $jasa->rincian_jasa->max('harga');
+        // $minPrice = $jasa->rincian_jasa->min('harga');
+        // $maxPrice = $jasa->rincian_jasa->max('harga');
 
-        $jasa->min_price = $minPrice;
-        $jasa->max_price = $maxPrice;
-        $jasa->save();;
+        // $jasa->min_price = $minPrice;
+        // $jasa->max_price = $maxPrice;
+        // $jasa->save();;
 
         toast('Data Rincian Sukses Dibuat!','success');
         return redirect(route('rincian-jasa'));
