@@ -30,4 +30,8 @@ class MappingSubGrup extends Model
     public function projects(){
         return $this->hasMany(Project::class);
     }
+
+    public function subProject(){
+        return $this->hasMany(MappingSubProject::class);
+    }
 }

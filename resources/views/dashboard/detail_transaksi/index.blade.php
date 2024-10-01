@@ -29,7 +29,7 @@
                             <th scope="row">{{ $index  }}</th>
                                 <td>{{ $item->jasa->nama}}</td>
                                 <td>{{ $item->transaksi->nama }}</td>
-                                <td>Rp {{ number_format($item->Minharga_total, 2, ',', '.')  }} - Rp {{number_format($item->Maxharga_total, 2, ',', '.')  }}</td>
+                                <td>{{ formatCurrency($item->Minharga_total, $currency[0])  }} - {{ formatCurrency($item->Maxharga_total, $currency[0])  }}</td>
                                 <td><p class="badge bg-primary">{{ $item->status }}</p></td>
                                 @auth('pegawai')
                                     <td class="d-flex gap-2">

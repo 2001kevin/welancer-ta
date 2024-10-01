@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Currency;
+use App\Models\MappingSubGrup;
+use App\Models\MappingSubProject;
 use App\Models\TerminPembayaran;
 use App\Models\transaksi;
 use Illuminate\Http\Request;
@@ -26,15 +29,17 @@ class TerminPembayaranController extends Controller
 
     public function index(){
         $termins = TerminPembayaran::orderBy('created_at', 'desc')->get();
-        return view('dashboard.payment.index', compact('termins'));
+        $currency = Currency::pluck('currency');
+        return view('dashboard.payment.index', compact('termins', 'currency'));
     }
 
     public function userIndex(){
         $user_id = Auth::user()->id;
         $transaksis = transaksi::where('user_id', $user_id)->pluck('id');
         $termins = TerminPembayaran::orderBy('created_at', 'desc')->whereIn('transaksi_id', $transaksis)->get();
+        $currency = Currency::pluck('currency');
         // dd($termins);
-        return view('dashboard.payment.userIndex', compact('termins'));
+        return view('dashboard.payment.userIndex', compact('termins', 'currency'));
     }
 
     public function createTransaction(Request $request)
@@ -84,11 +89,12 @@ class TerminPembayaranController extends Controller
         // }
 
         // Log::info('Transaction details:', (array) $transactionDetails);
+        $currency = Currency::find(1);
         $data = $this->formatTransactionData($transactionDetails);
         $termin->payment_status = $data['transaction_status'];
         $termin->payment_type = $data['payment_type'];
         $termin->transaction_time = $data['transaction_time'];
-        $termin->currency = $data['currency'];
+        $termin->currency = $currency->currency;
         $termin->order_id = $data['order_id'];
         $termin->status_code = $data['status_code'];
         $termin->signature_key = $data['signature_key'];
@@ -106,15 +112,41 @@ class TerminPembayaranController extends Controller
             $termin->status_termin = 'not payable';
             $transaksi_id = $termin->transaksi_id;
             $termin->save();
-            
+
             $transaksi = transaksi::find($transaksi_id);
             // Ambil rincian termin dan hitung jumlahnya
-            $rincian_termin = json_decode($transaksi->rincian_termin); // Asumsikan dalam bentuk array JSON
+            $rincianString = json_encode($transaksi->rincian);
+            $rincian_termin = json_decode($rincianString); // Asumsikan dalam bentuk array JSON
             $jumlah_termin = count($rincian_termin);
 
             // Buat status dinamis sesuai dengan jumlah termin
             for ($i = 1; $i <= $jumlah_termin; $i++) {
                 if ($transaksi->status == 'Waiting for Payment' && $i == 1) {
+                    $transaksi_id = $transaksi->id;
+                    $keuntungan_bersih = $transaksi->fix_price/2;
+                    $transaksi->keuntungan_bersih = $keuntungan_bersih;
+
+                    $subGrup = MappingSubGrup::where('transaksi_id', $transaksi_id)->first();
+                    $subGrup->keuntungan_bersih = $keuntungan_bersih;
+                    $subGrup->save();
+
+                    $subGrup_id = $subGrup->id;
+                    $subProyeks = MappingSubProject::where('mapping_sub_grup_id', $subGrup_id)->get();
+                    $totalPresentasiGaji = $subProyeks->sum('presentasi_gaji'); // Menggunakan koleksi untuk menjumlahkan
+
+                    // Cek apakah totalPresentasiGaji tidak nol
+                    if ($totalPresentasiGaji > 0) {
+                        foreach ($subProyeks as $subProyek) {
+                            $presentasiGaji = $subProyek->presentasi_gaji; // Perbaiki typo di sini
+                            $gaji = $presentasiGaji / $totalPresentasiGaji * $keuntungan_bersih;
+                            $subProyek->gaji = $gaji;
+                            $subProyek->save();
+                        }
+                    } else {
+
+                        // Handle jika totalPresentasiGaji adalah 0
+                        // Misalnya, log kesalahan atau atur gaji menjadi 0
+                    }
                     $transaksi->status = 'Termin ' . $i . ' Completed';
                     $transaksi->save();
                     break;
@@ -136,8 +168,10 @@ class TerminPembayaranController extends Controller
         }
 
         $termin_next = TerminPembayaran::find($termin_id_next);
-        $termin_next->status_termin = 'payable';
-        $termin_next->save();
+        if($termin_next){
+            $termin_next->status_termin = 'payable';
+            $termin_next->save();
+        }
 
         // $transaction = WVTransaction::where('order_id', $order_id)->first();
         // if ($transaction) {

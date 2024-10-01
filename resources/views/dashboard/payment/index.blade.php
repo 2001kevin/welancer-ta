@@ -13,6 +13,8 @@
                     <thead>
                         <tr>
                             <th class="text-center" scope="col">No</th>
+                            <th class="text-center" scope="col">Termin</th>
+                            <th class="text-center" scope="col">Project</th>
                             <th class="text-center" scope="col">Jumlah Pembayaran</th>
                             <th class="text-center" scope="col">Tanggal Termin</th>
                             <th class="text-center" scope="col">Status Pembayaran</th>
@@ -22,10 +24,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($termins as $termin)
+                        @foreach ($termins as $index => $termin)
                             <tr>
                                 <th class="text-center" scope="row">{{ $loop->index + 1 }}</th>
-                                <td class="text-center">Rp {{ number_format($termin->jumlah_pembayaran, 2) }}</td>
+                                <td class="text-center">{{ $termin->nama }}</td>
+                                <td class="text-center">{{ $termin->transaksi->nama }}</td>
+                                <td class="text-center">{{ formatCurrency($termin->jumlah_pembayaran, $currency[0]) }}</td>
                                 <td class="text-center">{{ $termin->tanggal_termin }}</td>
                                 @if ($termin->status_pembayaran == 'Payment Succesfull')
                                     <td class="text-center">
@@ -88,7 +92,7 @@
                                 <input type="text" name="name" id="name"
                                     class="bg-state-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 "
                                     placeholder="Type product name" required=""
-                                    value="Rp {{ number_format($termin->jumlah_pembayaran, 2) }}" disabled>
+                                    value="{{ formatCurrency($termin->jumlah_pembayaran, $currency[0]) }}" disabled>
                             </div>
                             <div class="col-span-2 sm:col-span-1">
                                 <label for="price" class="block mb-2 text-sm font-bold text-gray-900 ">Payment

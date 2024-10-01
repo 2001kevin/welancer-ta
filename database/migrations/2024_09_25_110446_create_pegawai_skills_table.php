@@ -13,17 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('mapping_sub_projects', function (Blueprint $table) {
+        Schema::create('pegawai_skills', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('mapping_sub_grup_id');
-            $table->unsignedBigInteger('rincian_jasa_id');
             $table->unsignedBigInteger('pegawai_id');
-            $table->decimal('presentasi_gaji')->nullable();
-            $table->decimal('gaji', 10,2)->default(0)->nullable();
-            $table->timestamps();
-            $table->foreign('mapping_sub_grup_id')->references('id')->on('mapping_sub_grups');
-            $table->foreign('rincian_jasa_id')->references('id')->on('rincian_jasas');
+            $table->unsignedBigInteger('skill_id');
+            $table->enum('level', ['beginner', 'middle', 'advance']);
             $table->foreign('pegawai_id')->references('id')->on('pegawais');
+            $table->foreign('skill_id')->references('id')->on('skills');
+            $table->timestamps();
             $table->dateTime('deleted_at')->nullable();
         });
     }
@@ -35,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mapping_sub_projects');
+        Schema::dropIfExists('pegawai_skills');
     }
 };

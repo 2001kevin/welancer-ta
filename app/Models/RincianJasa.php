@@ -17,7 +17,11 @@ class RincianJasa extends Model
     }
 
     public function detailJasa(){
-        return $this->hasMany(DetailJasa::class);
+        return $this->hasMany(DetailJasa::class, 'rincian_jasa_id');
+    }
+
+    public function subProject(){
+        return $this->hasMany(MappingSubProject::class);
     }
 
     // protected static function booted()

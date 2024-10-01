@@ -37,7 +37,7 @@
                                         <td>Transaction Not Approve Yet</td>
                                     @endisset
                                     <td>{{ $transaksi->kategori->nama }}</td>
-                                    <td>{{ $transaksi->jumlah_harga }}</td>
+                                    <td>{{ formatCurrency($transaksi->min, $currency[0]) }} - {{ formatCurrency($transaksi->max, $currency[0]) }}</td>
                                     <td class="text-center">
                                         <p class="badge bg-primary">{{ $transaksi->status }}</p>
                                     </td>
@@ -62,7 +62,7 @@
                                         <td>Transaction Not Approve Yet</td>
                                     @endisset
                                     <td>{{ $transaksi->kategori->nama }}</td>
-                                    <td>@currency($transaksi->fix_price)</td>
+                                    <td>{{ formatCurrency($transaksi->fix_price, $currency[0]) }}</td>
                                     <td class="text-center">
                                         <p class="badge bg-primary">{{ $transaksi->status }}</p>
                                     </td>
@@ -116,7 +116,7 @@
                     <form action="" method="POST">
                         @csrf
                         <div class="p-4 md:p-5">
-                            <p class="mb-3">Range Price : {{ $transaksi->jumlah_harga }}</p>
+                            <p class="mb-3">Range Price : {{ formatCurrency($transaksi->min, $currency[0]) }} - {{ formatCurrency($transaksi->max, $currency[0]) }}</p>
                             <div class="col-span-2 mb-2">
                                 <label for="tipe" class="block mb-2 text-sm font-medium text-gray-900">Fix Price</label>
                                 <input type="text" name="tipe" id="tipe"

@@ -14,6 +14,12 @@ class skill extends Model
     protected $table = 'skills';
 
     public function detailJasa(){
-        return $this->hasMany(DetailJasa::class);
+        return $this->hasMany(DetailJasa::class, 'skill_id');
+    }
+
+    public function pegawais()
+    {
+        return $this->belongsToMany(Pegawai::class, 'pegawai_skills')
+        ->withPivot('level');
     }
 }

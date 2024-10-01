@@ -34,6 +34,12 @@ class Pegawai extends Model implements Authenticatable
         return $this->hasMany(Comment::class);
     }
 
+    public function skills()
+    {
+        return $this->belongsToMany(Skill::class, 'pegawai_skills')
+        ->withPivot('level');
+    }
+
     // public function getAuthIdentifierName() {
     //     return 'id';
     // }

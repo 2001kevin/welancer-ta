@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\PegawaiSkill;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -22,7 +23,9 @@ class DatabaseSeeder extends Seeder
             JasaSeeder::class,
             RincianJasaSeeder::class,
             SkillSeeder::class,
-            DetailJasaSeeder::class
+            PegawaiSkillSeeder::class,
+            DetailJasaSeeder::class,
+            CurrencySeeder::class
         ]);
     }
 }

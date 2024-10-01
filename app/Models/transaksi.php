@@ -44,14 +44,14 @@ class transaksi extends Model
         return $this->hasMany(TerminPembayaran::class);
     }
 
-    protected static function boot()
-    {
-        parent::boot();
+    // protected static function boot()
+    // {
+    //     parent::boot();
 
-        static::updated(function ($transaction) {
-            if ($transaction->isDirty('fix_prices') && !is_null($transaction->fix_prices)) {
-                event(new FixPricesUpdated($transaction));
-            }
-        });
-    }
+    //     static::updated(function ($transaction) {
+    //         if ($transaction->isDirty('fix_prices') && !is_null($transaction->fix_prices)) {
+    //             event(new FixPricesUpdated($transaction));
+    //         }
+    //     });
+    // }
 }

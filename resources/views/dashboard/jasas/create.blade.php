@@ -11,33 +11,19 @@
                                 </div>
                                 <form action="{{ route('store-jasa') }}" method="POST" class="row sign-up-form form g-3" enctype="multipart/form-data">
                                   @csrf
-                                    <div class="col">
-                                      <label for="Name" class="form-label">Nama</label>
-                                      <input type="text" class="form-control" placeholder="Name" name="nama" id="name" required>
+                                   <div class="mb-2">
+                                        <label for="name" class="block mb-2 text-sm font-medium text-gray-900">Name</label>
+                                        <input type="text" id="name" name="nama" class="shadow-sm bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required placeholder="Service Name" />
                                   </div>
-                                  <div class="col">
-                                      <label for="Description" class="form-label">Deskripsi</label>
-                                      <input type="text" placeholder="Description" name="deskripsi" class="form-control" id="name" required>
+                                  <div class="mb-2">
+                                        <label for="message" class="block mb-2 text-sm font-medium text-gray-900">Description</label>
+                                        <textarea id="message" rows="4" name="deskripsi" class="block p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Service Description" required></textarea>
                                   </div>
-                                  <label for="min_price" class="form-label">Harga Minimal</label>
-                                      <input type="number" placeholder="harga minimal" name="min_price" class="form-control" id="name" required>
-                                  <label for=""></label>
-                                  <label for="min_price" class="form-label">Harga Maximal</label>
-                                      <input type="number" placeholder="harga maximal" name="max_price" class="form-control" id="name" required>
-                                  <label for="">Paket Jasa</label>
-                                  <select class="form-select" name="paket_jasa" aria-label="Default select example" required>
-                                    <option value selected>Pilih Paket Jasa</option>
-                                    @foreach ($paketJasas as $paketJasa)
-                                        <option value="{{ $paketJasa->id }}">{{ $paketJasa->nama }}</option>
-                                    @endforeach
-                                  </select>
-                                  <label for="">Kategori</label>
-                                  <select class="form-select" name="kategori" aria-label="Default select example" required>
-                                    <option value selected>Pilih Kategori</option>
-                                    @foreach ($kategoris as $kategori)
-                                        <option value="{{ $kategori->id }}">{{ $kategori->nama }}</option>
-                                    @endforeach
-                                  </select>
+                                  <div class="mb-3">
+                                        <label for="kategori" class="block mb-2 text-sm font-medium text-gray-900">Category</label>
+                                        <input type="text" id="kategori" value="{{ $kategori->nama }}" readonly class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="name@flowbite.com" required />
+                                        <input type="text" name="kategori" value="{{ $kategori->id }}" hidden>
+                                  </div>
                                   <div class="col d-grid gap-2 purple button-submit">
                                       <button type="submit">Submit</button>
                                   </div>
@@ -47,5 +33,22 @@
                 </div>
             </div>
         </div>
-
+    @section('scripts')
+        @if (session('error_list'))
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Validation Errors',
+                        html: `{!! session('error_list') !!}`,
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 5000,
+                        timerProgressBar: true,
+                    });
+                });
+            </script>
+        @endif
+    @endsection
 @endsection

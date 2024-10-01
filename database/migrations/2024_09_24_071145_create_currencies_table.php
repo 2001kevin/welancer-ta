@@ -13,14 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('detail_transaksi_jasas', function (Blueprint $table) {
+        Schema::create('currencies', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('detail_transaksi_id');
-            $table->unsignedBigInteger('detail_jasa_id');
-            $table->integer('qty');
-            $table->decimal('harga', 10,0);
-            $table->foreign('detail_transaksi_id')->references('id')->on('detail_transaksis');
-            $table->foreign('detail_jasa_id')->references('id')->on('rincian_jasas');
+            $table->string('currency');
             $table->timestamps();
             $table->dateTime('deleted_at')->nullable();
         });
@@ -33,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('detail_transaksi_jasas');
+        Schema::dropIfExists('currencies');
     }
 };

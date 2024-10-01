@@ -12,7 +12,7 @@ class DetailJasa extends Model
     protected $table = 'detail_jasas';
 
     public function skill(){
-        return $this->belongsTo(skill::class);
+        return $this->belongsTo(skill::class, 'skill_id', 'id');
     }
 
     public function rincianJasa(){

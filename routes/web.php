@@ -15,6 +15,9 @@ use App\Http\Controllers\SkillController;
 use App\Http\Controllers\TerminPembayaranController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\CommentProjectController;
+use App\Http\Controllers\CurrencyController;
+use App\Http\Controllers\PegawaiController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SettingTerminController;
 use App\Http\Controllers\UserController;
 use App\Models\RincianJasa;
@@ -53,13 +56,13 @@ Route::post('skill/update/{id}', [SkillController::class, 'updateSkill'])->name(
 Route::post('skill/delete/{id}', [SkillController::class, 'deleteSkill'])->name('delete-skill');
 
 Route::get('dashboard/jasa/{id}', [JasaController::class, 'jasa'])->name('jasa');
-Route::get('jasa/create', [JasaController::class, 'createJasa'])->name('create-jasa');
+Route::get('jasa/create/{id}', [JasaController::class, 'createJasa'])->name('create-jasa');
 Route::post('jasa/store', [JasaController::class, 'storeJasa'])->name('store-jasa');
 Route::post('jasa/update/{id}', [JasaController::class, 'updateJasa'])->name('update-jasa');
 Route::post('jasa/delete/{id}', [JasaController::class, 'deleteJasa'])->name('delete-jasa');
 
 Route::get('dashboard/rincianJasa', [RincianJasaController::class, 'rincianJasa'])->name('rincian-jasa');
-Route::get('rincian/create', [RincianJasaController::class, 'createRincian'])->name('create-rincian');
+Route::get('rincian/create/{id}', [RincianJasaController::class, 'createRincian'])->name('create-rincian');
 Route::post('rincian/store', [RincianJasaController::class, 'storeRincian'])->name('store-rincian');
 Route::post('rincian/update/{id}', [RincianJasaController::class, 'updateRincian'])->name('update-rincian');
 Route::post('rincian/delete/{id}', [RincianJasaController::class, 'deleteRincian'])->name('delete-rincian');
@@ -69,6 +72,7 @@ Route::get('detail/create', [JasaController::class, 'createDetailJasa'])->name('
 Route::post('detail/store', [JasaController::class, 'storeDetailJasa'])->name('store-detail-jasa');
 Route::post('detail/update/{id}', [JasaController::class, 'updateDetailJasa'])->name('update-detail-jasa');
 Route::post('detail/delete/{id}', [JasaController::class, 'deleteDetailJasa'])->name('delete-detail-jasa');
+Route::get('detail/sub-service/{id}', [JasaController::class, 'detailSubJasa'])->name('detail-subJasa');
 
 Route::get('detail-paket/create', [DetailPaketController::class, 'create'])->name('create-detail-paket');
 Route::post('detail-paket/store', [DetailPaketController::class, 'store'])->name('store-detail-paket');
@@ -114,3 +118,15 @@ Route::post('/project/update/{id}', [ProjectController::class, 'updateLink'])->n
 Route::get('/setting/termin', [SettingTerminController::class, 'index'])->name('setting-termin');
 Route::post('/setting/store', [SettingTerminController::class, 'store'])->name('setting-store');
 Route::post('/setting/update/{id}', [SettingTerminController::class, 'update'])->name('setting-update');
+
+Route::post('/currency', [CurrencyController::class, 'update'])->name('update-currency');
+
+Route::get('/dashboard/freelancer', [PegawaiController::class, 'index'])->name('index-pegawai');
+Route::get('/freelancer/create', [PegawaiController::class, 'create'])->name('create-pegawai');
+Route::post('/freelancer/store', [PegawaiController::class, 'store'])->name('store-pegawai');
+Route::get('/get-pegawais-by-skill/{skillId}', [PegawaiController::class, 'getPegawaisBySkill']);
+Route::get('/freelancer/skill/{id}', [PegawaiController::class, 'detailSkill'])->name('freelancer-skill');
+
+Route::get('/dashboard/report', [ReportController::class, 'adminReport'])->name('admin-report');
+Route::get('/report/freelancer/{id}', [ReportController::class, 'detailFreelancer'])->name('report-freelancer');
+Route::get('/report/freelancer', [ReportController::class, 'reportFreelancer'])->name('freelancer-report');

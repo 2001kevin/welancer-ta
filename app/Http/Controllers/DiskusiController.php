@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Events\ChatEvent;
 use App\Models\Comment;
+use App\Models\Currency;
 use App\Models\DetailDiskusi;
 use App\Models\DetailTransaksi;
 use App\Models\MappingSubGrup;
@@ -24,8 +25,6 @@ class DiskusiController extends Controller
             $userId = auth()->id();
             $grups = MappingGrup::whereHas('mapping_sub_grups')->get();
             $diskusis = Diskusi::with(['comments'])->where('user_id', $userId)->whereNot('tanggal_diskusi', null)->orderBy('id', 'desc')->get();
-            // return $diskusis;
-            // dd($diskusis[0]->comments);
             return view('dashboard.diskusi.room', compact('diskusis', 'grups'));
         } else {
             $adminId = auth()->guard('pegawai')->id();
@@ -36,7 +35,7 @@ class DiskusiController extends Controller
                 $sub_grups = MappingSubGrup::where('pegawai_id', $adminId)->get();
                 $grup_pm = MappingGrup::where('pegawai_id', $adminId)->pluck('id');
                 $mapping_grup_ids = $sub_grups->pluck('mapping_grup_id');
-                $diskusis = Diskusi::with(['comments'])->whereIn('mapping_grup_id', $mapping_grup_ids)->orderBy('id', 'desc')->get();
+                $diskusis = Diskusi::with(['comments'])->whereIn('mapping_grup_id', $grup_pm)->orderBy('id', 'desc')->get();
                 return view('dashboard.diskusi.room', compact('diskusis', 'grups', 'project_manager'));
             }elseif($role == "superadmin"){
                 $grups = MappingGrup::whereHas('mapping_sub_grups')->get();
@@ -189,6 +188,7 @@ class DiskusiController extends Controller
         if ($diskusi) {
             $id_diskusi = $diskusi->id;
             $mapping_grup_id = $diskusi->mapping_grup_id;
+            $currency = Currency::pluck('currency');
 
             $mapping_grup = MappingGrup::find($mapping_grup_id);
             if ($mapping_grup) {
@@ -217,7 +217,7 @@ class DiskusiController extends Controller
                     $room = Diskusi::where('id', $id_diskusi)->first();
                     $id_transaksi = $room->transaksi_id;
                     $det_transaksi = DetailTransaksi::where('transaksi_id', $id_transaksi)->get();
-                    return view('dashboard.diskusi.chat', compact('room', 'id_pegawai_grup', 'target_id', 'det_transaksi', 'mapping_grup'));
+                    return view('dashboard.diskusi.chat', compact('room', 'id_pegawai_grup', 'target_id', 'det_transaksi', 'mapping_grup', 'currency'));
                 } else {
                     $my_id = auth()->id();
                     $user = User::find($my_id);
@@ -226,7 +226,7 @@ class DiskusiController extends Controller
                     $room = Diskusi::where('id', $id_diskusi)->first();
                     $id_transaksi = $room->transaksi_id;
                     $det_transaksi = DetailTransaksi::where('transaksi_id', $id_transaksi)->get();
-                    return view('dashboard.diskusi.chat', compact('room', 'my_id', 'target_id', 'nama_user', 'det_transaksi', 'mapping_grup'));
+                    return view('dashboard.diskusi.chat', compact('room', 'my_id', 'target_id', 'nama_user', 'det_transaksi', 'mapping_grup', 'currency'));
                 }
             } else {
                 // Tangani kasus jika tidak ada mapping_grup yang ditemukan

@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DetailJasa;
 use App\Models\Jasa;
+use App\Models\Pegawai;
+use App\Models\PegawaiSkill;
 use App\Models\RincianJasa;
+use App\Models\skill;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -25,9 +29,11 @@ class RincianJasaController extends Controller
         ]);
     }
 
-    public function createRincian(){
-        $jasas = Jasa::all();
-        return view('dashboard.rincian_jasa.create', compact('jasas'));
+    public function createRincian($id){
+        $jasa = Jasa::find($id);
+        $skills = skill::all();
+        $pegawais = Pegawai::where('role', 'freelancer')->get();
+        return view('dashboard.rincian_jasa.create', compact('jasa', 'skills', 'pegawais'));
     }
 
     public function storeRincian(Request $request){
@@ -39,24 +45,39 @@ class RincianJasaController extends Controller
             'harga' => 'required'
         ]);
 
-        RincianJasa::create([
-            'nama' => $request->nama,
-            'unit' => $request->unit,
-            'unit_type' => $request->unit_type,
-            'harga' => $request->harga,
-            'jasa_id' => $request->jasa
-        ]);
-        // $jasa = Jasa::find($request->jasa); // Ganti 1 dengan ID Jasa yang ingin diperbarui
+        // RincianJasa::create([
+        //     'nama' => $request->nama,
+        //     'unit' => $request->unit,
+        //     'unit_type' => $request->unit_type,
+        //     'harga' => $request->harga,
+        //     'jasa_id' => $request->jasa
+        // ]);
+        $pegawai = Pegawai::find($request->pegawai);
+        $skill = $pegawai->skills()->where('skill_id', $request->skill)->first();
 
-        // $minPrice = $jasa->rincian_jasa->min('harga');
-        // $maxPrice = $jasa->rincian_jasa->max('harga');
+        // Mengambil level dari tabel pivot
+        $level = $skill->pivot->level;
 
-        // $jasa->min_price = $minPrice;
-        // $jasa->max_price = $maxPrice;
-        // $jasa->save();;
+        $rincianJasa = new RincianJasa();
+        $rincianJasa->nama = $request->nama;
+        $rincianJasa->unit = $request->unit;
+        $rincianJasa->tipe_unit = $request->unit_type;
+        $rincianJasa->jasa_id = $request->jasa;
+        $rincianJasa->harga = $request->harga;
+        $data1 = $rincianJasa->save();
 
-        toast('Data Rincian Sukses Dibuat!','success');
-        return redirect(route('rincian-jasa'));
+        $detailJasa = new DetailJasa();
+        $detailJasa->skill_id = $request->skill;
+        $detailJasa->rincian_jasa_id = $rincianJasa->id;
+        $detailJasa->pegawai_id = $request->pegawai;
+        $detailJasa->level_freelancer = $level;
+        $data2 = $detailJasa->save();
+
+        if($data1 && $data2){
+            toast('Sub Service Created Successfully!','success');
+        }
+
+        return redirect(route('detail-subJasa', $request->jasa));
     }
 
     public function updateRincian(Request $request, $id){

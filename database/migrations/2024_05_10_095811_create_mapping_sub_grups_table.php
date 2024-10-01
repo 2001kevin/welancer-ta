@@ -20,6 +20,7 @@ return new class extends Migration
             $table->unsignedBigInteger('detail_transaksi_id');
             $table->unsignedBigInteger('pegawai_id');
             $table->string('nama');
+            $table->decimal('keuntungan_bersih', 10,0)->nullable();
             $table->foreign('transaksi_id')->references('id')->on('transaksis');
             $table->foreign('mapping_grup_id')->references('id')->on('mapping_grups');
             $table->foreign('detail_transaksi_id')->references('id')->on('detail_transaksis');

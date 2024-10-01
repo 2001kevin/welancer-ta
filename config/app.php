@@ -192,6 +192,7 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // ...
+        'Currency' => Magarrent\LaravelCurrencyFormatter\Facades\Currency::class,
     ])->toArray(),
 
     'broadcasting' => [

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\FixPricesUpdated;
 use App\Events\TransactionCreated;
+use App\Models\Currency;
 use App\Models\DetailTransaksi;
 use App\Models\DetailTransaksiJasa;
 use App\Models\Jasa;
@@ -23,20 +24,23 @@ class TransaksiController extends Controller
     public function indexTransaksi(){
         $user_id = auth()->user()->id;
         $transaksis = transaksi::where('user_id', $user_id)->orderBy('updated_at', 'desc')->get();
+        $currency = Currency::pluck('currency');
 
-        return view('dashboard.transaksi.index', compact('transaksis'));
+        return view('dashboard.transaksi.index', compact('transaksis', 'currency'));
     }
 
     public function indexAdmin(){
         $transaksis = transaksi::orderBy('created_at', 'desc')->get();
-        return view('dashboard.transaksi.index', compact('transaksis'));
+        $currency = Currency::pluck('currency');
+        return view('dashboard.transaksi.index', compact('transaksis', 'currency'));
     }
 
     public function createTransaksi(){
         $jasas = Jasa::whereHas('rincian_jasa')->get();
         $sub_services = RincianJasa::all();
         $kategoris = Kategori::all();
-        return view('dashboard.transaksi.create', compact('jasas', 'kategoris'));
+        $currency = Currency::pluck('currency');
+        return view('dashboard.transaksi.create', compact('jasas', 'kategoris', 'currency'));
     }
 
     public function storeTransaksi(Request $request)
@@ -52,8 +56,9 @@ class TransaksiController extends Controller
         // Ubah kedua nilai menjadi integer
         $number1 = (int)$numbers[0];
         $number2 = (int)$numbers[1];
+
         if($number1 === $number2){
-            $status = 'On Negotiations';
+            $status = 'Waiting for Payment';
             $settingTermin = SettingTermin::first();
 
             $transaksi = new Transaksi();
@@ -61,13 +66,14 @@ class TransaksiController extends Controller
             $transaksi->pegawai_id = null;
             $transaksi->nama = $request->name_project;
             $transaksi->kategori_id = $request->kategori;
-            $transaksi->jumlah_harga = $totalValue;
+            $transaksi->min = $number1;
+            $transaksi->max = $number2;
             $transaksi->fix_price = $number1;
             $transaksi->jumlah_termin = $settingTermin->jumlah_termin;
             $transaksi->rincian = $settingTermin->rincian;
             $transaksi->status = $status;
             $data1 = $transaksi->save();
-            event(new TransactionCreated($transaksi));
+            // event(new TransactionCreated($transaksi));
         }else{
             $status = 'On Negotiations';
             $settingTermin = SettingTermin::first();
@@ -77,7 +83,8 @@ class TransaksiController extends Controller
             $transaksi->pegawai_id = null;
             $transaksi->nama = $request->name_project;
             $transaksi->kategori_id = $request->kategori;
-            $transaksi->jumlah_harga = $totalValue;
+            $transaksi->min = $number1;
+            $transaksi->max = $number2;
             $transaksi->jumlah_termin = $settingTermin->jumlah_termin;
             $transaksi->rincian = $settingTermin->rincian;
             $transaksi->status = $status;
@@ -149,9 +156,10 @@ class TransaksiController extends Controller
             $transaksi->status = $request->status;
             $transaksi->pegawai_id = auth()->guard('pegawai')->id();
             $transaksi->save();
+            event(new TransactionCreated($transaksi));
 
-            $termin = $request->termin;
-            $persenTermin = $termin / 100;
+            // $termin = $request->termin;
+            // $persenTermin = $termin / 100;
 
             // Update detail transaksi
             $detailTransaksis = DetailTransaksi::where('transaksi_id', $transaksi->id)->get();
@@ -159,32 +167,32 @@ class TransaksiController extends Controller
                 $detailTransaksi->status = $request->status;
                 $detailTransaksi->save();
 
-                $subGrups = MappingSubGrup::where('detail_transaksi_id', $detailTransaksi->id)->get();
-                if ($subGrups->isEmpty()) {
-                    DB::rollBack();
-                    toast('No sub groups found for detail transaction', 'error');
-                    return redirect()->back();
-                }
-                // Buat project untuk setiap detail transaksi
-                $projectTypes = [
-                    'Project Phase 1',
-                    'Project Phase 2',
-                    'Project Phase 3',
-                ];
-                // foreach ($subGrups as $subGrup) {
-                //     foreach ($projectTypes as $projectType) {
-                //         $project = new Project();
-                //         $project->sub_grup_id = $subGrup->id;
-                //         $project->nama = $projectType;
-                //         $project->save();
-                //     }
+                // $subGrups = MappingSubGrup::where('detail_transaksi_id', $detailTransaksi->id)->get();
+                // if ($subGrups->isEmpty()) {
+                //     DB::rollBack();
+                //     toast('No sub groups found for detail transaction', 'error');
+                //     return redirect()->back();
                 // }
+                // // Buat project untuk setiap detail transaksi
+                // $projectTypes = [
+                //     'Project Phase 1',
+                //     'Project Phase 2',
+                //     'Project Phase 3',
+                // ];
+                // // foreach ($subGrups as $subGrup) {
+                // //     foreach ($projectTypes as $projectType) {
+                // //         $project = new Project();
+                // //         $project->sub_grup_id = $subGrup->id;
+                // //         $project->nama = $projectType;
+                // //         $project->save();
+                // //     }
+                // // }
             }
 
             DB::commit();
 
             toast('Transaction Updated Successfully', 'success');
-            event(new FixPricesUpdated($transaksi, $persenTermin));
+            // event(new FixPricesUpdated($transaksi, $persenTermin));
         } catch (\Exception $e) {
             DB::rollBack();
             toast('Failed to update transaction: ' . $e->getMessage(), 'error');

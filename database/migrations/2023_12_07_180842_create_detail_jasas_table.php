@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('skill_id');
             $table->unsignedBigInteger('rincian_jasa_id');
             $table->unsignedBigInteger('pegawai_id');
+            $table->enum('level', ['beginner', 'middle', 'advance']);
             $table->foreign('skill_id')->references('id')->on('skills')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('rincian_jasa_id')->references('id')->on('rincian_jasas')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('pegawai_id')->references('id')->on('pegawais')->onUpdate('cascade')->onDelete('cascade');

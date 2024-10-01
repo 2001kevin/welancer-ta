@@ -22,23 +22,62 @@
             <div class="mt-8 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
                 @foreach ($projects as $project)
                     @php
-                        $completedTermin = 0;
-                        $terminStatus = 'Termin ' . $loop->iteration . ' Completed'; // Menyimpan status termin
+                        // Mendapatkan jumlah termin dari setiap project (misal, dari relasi atau kolom di database)
+                        $jumlahTermin = count($project->subGrup->transaksi->rincian); // Sesuaikan dengan struktur datamu
 
-                        if ($status_transaksi == $terminStatus) {
-                            $completedTermin = $loop->iteration;
+                        $completedTermin = 0;
+
+                        // Menghitung jumlah termin yang sudah terbayar berdasarkan status transaksi
+                        for ($i = 1; $i <= $jumlahTermin; $i++) {
+                            // Jumlah termin dinamis berdasarkan project
+                            $terminStatus = 'Termin ' . $i . ' Completed';
+                            if ($status_transaksi == $terminStatus) {
+                                $completedTermin = $i; // Menghitung termin yang telah diselesaikan
+                            }
                         }
 
                         // Mendapatkan fase project berdasarkan nama project
-                        $projectPhase = 0;
-                        $projectPhaseName = 'Project Phase ' . $loop->iteration; // Menyimpan nama fase project
-
-                        if ($project->nama == $projectPhaseName) {
-                            $projectPhase = $loop->iteration;
-                        }
+                        $projectPhase = (int) filter_var($project->nama, FILTER_SANITIZE_NUMBER_INT); // Mendapatkan angka dari nama project
                     @endphp
 
                     @if ($completedTermin >= $projectPhase)
+                        <div class="block rounded-xl border border-gray-800 p-8 shadow-xl transition hover:border-blue-500/10 hover:shadow-blue-500/10"
+                            href="#">
+                            <img src="{{ asset('images/LOGO.png') }}" alt="">
+                                <a href="{{ route('detail-project', $project->id) }}">
+                                    <h2 class="mt-4 text-xl font-bold text-black ">{{ $project->nama }}</h2>
+                                </a>
+                            <h2 class="mb-2 text-lg font-semibold text-gray-900">Service Requested:</h2>
+                            <ul class="max-w-md space-y-1 text-gray-500 list-inside mb-3">
+                                @foreach ($project->subGrup->detailTransaksi->detailTransaksiJasas as $coba)
+                                    <li class="flex items-center capitalize">
+                                        <svg class="w-3.5 h-3.5 me-2 text-green-500 flex-shrink-0" aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                            <path
+                                                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+                                        </svg>
+                                        {{ $coba->rincianJasa->nama }}
+                                    </li>
+                                @endforeach
+                            </ul>
+                            <div class="flex items-center justify-between gap-4">
+                                @if ($project->link == null)
+                                    <button type="button"
+                                        class="text-white bg-slate-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2.5 me-2 mb-2 focus:outline-none"
+                                        disabled>View Project</button>
+                                @else
+                                    <a href="{{ $project->link }}" target="_blank">
+                                        <button type="button"
+                                            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2.5 me-2 mb-2 focus:outline-none">View
+                                            Project</button>
+                                    </a>
+                                @endif
+                                <button class="button-comment" data-modal-target="comment-modal-{{ $project->id }}"
+                                    data-modal-toggle="comment-modal-{{ $project->id }}"><i
+                                        class="fa-solid fa-comment"></i></button>
+                            </div>
+                        </div>
+                    @elseif ($status_transaksi == 'All Payment Completed')
                         <div class="block rounded-xl border border-gray-800 p-8 shadow-xl transition hover:border-blue-500/10 hover:shadow-blue-500/10"
                             href="#">
                             <img src="{{ asset('images/LOGO.png') }}" alt="">
@@ -58,23 +97,27 @@
                                     </li>
                                 @endforeach
                             </ul>
-                                <div class="flex items-center justify-between gap-4">
-                                    @if ($project->link == NULL)
-                                            <button type="button" class="text-white bg-slate-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2.5 me-2 mb-2 focus:outline-none" disabled>View Project</button>
-                                        @else
-                                            <a href="{{ $project->link }}" target="_blank">
-                                                <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2.5 me-2 mb-2 focus:outline-none">View Project</button>
-                                            </a>
-                                        @endif
-                                    <button class="button-comment" data-modal-target="comment-modal-{{ $project->id }}"
-                                        data-modal-toggle="comment-modal-{{ $project->id }}"><i
-                                            class="fa-solid fa-comment"></i></button>
-                                </div>
+                            <div class="flex items-center justify-between gap-4">
+                                @if ($project->link == null)
+                                    <button type="button"
+                                        class="text-white bg-slate-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2.5 me-2 mb-2 focus:outline-none"
+                                        disabled>View Project</button>
+                                @else
+                                    <a href="{{ $project->link }}" target="_blank">
+                                        <button type="button"
+                                            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2.5 me-2 mb-2 focus:outline-none">View
+                                            Project</button>
+                                    </a>
+                                @endif
+                                <button class="button-comment" data-modal-target="comment-modal-{{ $project->id }}"
+                                    data-modal-toggle="comment-modal-{{ $project->id }}"><i
+                                        class="fa-solid fa-comment"></i></button>
+                            </div>
                         </div>
                     @else
                         <div class="relative bg-white border rounded-xl border-gray-400">
                             <div class="absolute top-50 left-50 w-full text-center">
-                                <p><strong>Termin {{ $loop->iteration }} not payed</strong></p>
+                                <p><strong>Termin {{ $projectPhase }} not payed</strong></p>
                             </div>
                             <div class="blur-sm">
                                 <a class="block rounded-xl border border-gray-800 p-8 shadow-xl">
@@ -91,6 +134,7 @@
                     @endif
                 @endforeach
             </div>
+
         </div>
     </section>
 

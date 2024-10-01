@@ -46,6 +46,7 @@ class GenerateTermins
             // Simpan rincian termin ke database
             TerminPembayaran::create([
                 'transaksi_id' => $transaction->id,
+                'nama' => 'Termin '. $key+1,
                 'jumlah_pembayaran' => $portion,
                 'tanggal_termin' => $updatedAt->copy()->addMonths($key),
                 'status_pembayaran' => 'Waiting Payment',

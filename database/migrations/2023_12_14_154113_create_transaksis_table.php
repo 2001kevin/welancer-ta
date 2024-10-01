@@ -19,8 +19,10 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('pegawai_id')->nullable();
             $table->unsignedBigInteger('kategori_id');
-            $table->decimal('jumlah_harga')->default('0');
-            $table->decimal('fix_price')->nullable();
+            $table->decimal('min', 10,0);
+            $table->decimal('max', 10,0);
+            $table->decimal('fix_price', 10,0)->nullable();
+            $table->decimal('keuntungan_bersih', 10,0)->nullable();
             $table->integer('jumlah_termin');
             $table->json('rincian');
             $table->string('status')->default('On Negotiations');

@@ -138,17 +138,29 @@
                 quantityInput.style.display = checkbox.checked ? 'block' : 'none';
             }
 
+            const currency = @json($currency);
+            const selectedCurrency = currency.length > 0 ? currency[0]: 'IDR';
+
+            function formatCurrency(amount, currency) {
+                return new Intl.NumberFormat('id-ID', {
+                    style: 'currency',
+                    currency: currency,
+                    minimumFractionDigits: 0
+                }).format(amount);
+            }
+
             document.getElementById('kategori').addEventListener('change', function() {
                 const selectedCategoryId = this.value;
                 const serviceRadio = document.getElementById('service');
                 serviceRadio.innerHTML = '';
-
                 document.getElementById('sub-service-list').innerHTML = '';
                 document.getElementById('sub-service').style.display = 'none';
 
                 @foreach ($jasas as $jasa)
-                    if ("{{ $jasa->kategori->id }}" == selectedCategoryId) {
-                        serviceRadio.innerHTML += `
+                if ("{{ $jasa->kategori->id }}" == selectedCategoryId) {
+                    const formattedminPrice = formatCurrency({{ $jasa->min_price}}, selectedCurrency)
+                    const formattedmaxPrice = formatCurrency({{ $jasa->max_price}}, selectedCurrency)
+                    serviceRadio.innerHTML += `
                     <li class="">
                         <input type="checkbox" id="service-option-{{ $jasa->id }}" value="{{ $jasa->id }}" data-min="{{ $jasa->min_price }}" data-max="{{ $jasa->max_price }}" name="service[]" class="peer hidden"/>
                         <label for="service-option-{{ $jasa->id }}" class="mb-2 mr-2 inline-flex items-center justify-between w-full p-4 text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer peer-checked:border-blue-600 hover:text-gray-950 peer-checked:text-gray-950 hover:bg-gray-50">
@@ -156,7 +168,7 @@
                                 <div class="w-full text-lg font-semibold capitalize">{{ $jasa->nama }}</div>
                                 <div class="w-full text-sm normal-case">{{ $jasa->deskripsi }}.</div>
                                 <div class="w-full text-lg font-semibold capitalize">Estimated Price:</div>
-                                <div class="w-full text-sm normal-case">Rp {{ $jasa->min_price }} - Rp {{ $jasa->max_price }}</div>
+                                <div class="w-full text-sm normal-case">${formattedminPrice} - ${formattedmaxPrice}</div>
                             </div>
                         </label>
                     </li>
@@ -241,12 +253,13 @@
                     const quantity = quantityInput ? parseInt(quantityInput.value) : 1;
                     const unit = parseInt(quantityInput.getAttribute('min'));
                     const totalPrice = hitungTotalHarga(unit, quantity, parseInt(subServicePrice));
+                    const formattedPrice = formatCurrency(totalPrice, selectedCurrency);
 
                     const summaryItem = document.createElement('div');
                     summaryItem.classList.add('order-summary-item', 'flex', 'justify-between', 'mt-3');
                     summaryItem.innerHTML = `
                     <p class="font-medium">${subServiceName}</p>
-                    <p> Rp ${totalPrice}</p>
+                    <p>${formattedPrice}</p>
                 `;
                     orderSummary.appendChild(summaryItem);
 
@@ -262,12 +275,13 @@
                 let totalPrice = 0;
                 let minPrice = Infinity;
 
+
                 const selectedSubServices = document.querySelectorAll('input[name="sub_service[]"]:checked');
                 selectedSubServices.forEach(function(subService) {
                     const subServicePrice = parseInt(subService.dataset.harga);
                     const quantityInput = document.querySelector(
                         `input[name="quantity[${subService.value}]"]`);
-                    const quantity = quantityInput ? parseInt(quantityInput.value) : 1;
+                        const quantity = quantityInput ? parseInt(quantityInput.value) : 1;
                     const unit = parseInt(quantityInput.getAttribute('min'));
                     const totalSubServicePrice = hitungTotalHarga(unit, quantity, subServicePrice);
 
@@ -277,16 +291,18 @@
 
                     totalPrice += totalSubServicePrice;
                 });
-
+                const formattedMinPrice = formatCurrency(minPrice, selectedCurrency);
+                const formattedTotalPrice = formatCurrency(totalPrice, selectedCurrency);
+                console.log(formattedMinPrice);
                 const totalText = document.getElementById('total');
-                totalText.textContent = `Rp ${minPrice} - Rp ${totalPrice}`;
+                totalText.textContent = `${formattedMinPrice} - ${formattedTotalPrice}`;
 
                 const totalValueInput = document.getElementById('totalValueInput');
                 const maxValue = document.getElementById('valueMax');
                 if (minPrice === Infinity) {
                     totalValueInput.value = '0';
                 } else {
-                    totalValueInput.value = `Rp ${minPrice} - Rp ${totalPrice}`;
+                    totalValueInput.value = `${minPrice} - ${totalPrice}`;
                     maxValue.value = `${totalPrice}`;
                 }
             }

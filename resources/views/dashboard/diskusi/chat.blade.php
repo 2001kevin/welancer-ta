@@ -32,7 +32,7 @@
                     <p class="font-bold mb-2 mt-3">
                         Price Range :
                     </p>
-                    <p class="font-medium">{{ $room->transaksis->jumlah_harga }}</p>
+                    <p class="font-medium">{{ formatCurrency($room->transaksis->min, $currency[0]) }} - {{ formatCurrency($room->transaksis->max, $currency[0]) }}</p>
                 @endif
                 @if(Auth::guard('pegawai')->id() == $mapping_grup->pegawai_id)
                     <button type="button" data-modal-target="crud-modal" data-modal-toggle="crud-modal"
@@ -79,7 +79,7 @@
                     <form action="{{ route('update-transaksi', $room->transaksis->id) }}" method="POST">
                         @csrf
                         <div class="p-4 md:p-5">
-                            <p class="mb-3">Range Price : {{ $room->transaksis->jumlah_harga }}</p>
+                            <p class="mb-3">Range Price : {{ formatCurrency($room->transaksis->min, $currency[0]) }} - {{ formatCurrency($room->transaksis->max, $currency[0]) }}</p>
                             <div class="col-span-2 mb-2">
                                 <label for="fix_price" class="block mb-2 text-sm font-medium text-gray-900">Fix
                                     Price</label>
@@ -87,7 +87,7 @@
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 "
                                     placeholder="fix price" required="">
                             </div>
-                            <label for="website-admin"
+                            {{-- <label for="website-admin"
                                 class="block mb-2 text-sm font-medium text-gray-900">First Termin</label>
                             <div class="flex mb-2">
                                 <span
@@ -97,7 +97,7 @@
                                 <input type="number" id="website-admin" oninput="validity.valid||(value='');" name="termin"
                                     class="rounded-none rounded-e-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm p-2.5"
                                     placeholder="First Termin">
-                            </div>
+                            </div> --}}
                             <div class="mb-3">
                                 <label for="status" class="block mb-2 text-sm font-medium text-gray-900 ">Select
                                     Status</label>

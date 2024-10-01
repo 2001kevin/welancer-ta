@@ -15,6 +15,7 @@ use App\Models\RincianJasa;
 use App\Models\skill;
 use App\Models\transaksi;
 use Illuminate\Http\Request;
+use App\Events\TransactionCreated;
 
 class GroupController extends Controller
 {
@@ -41,6 +42,7 @@ class GroupController extends Controller
 
     public function store(Request $request)
     {
+        // return $request;
         $transaksi_id = $request->transaksi_id;
         $transaksi = transaksi::find($transaksi_id);
         $transaksiFix = $transaksi->fix_price;
@@ -72,31 +74,23 @@ class GroupController extends Controller
                         $sub_project->mapping_sub_grup_id = $sub_grup->id;
                         $sub_project->rincian_jasa_id = $rincian_jasa_id;
                         $sub_project->pegawai_id = $pegawai_transaksi_jasa;
+                        $detail_jasa = DetailJasa::where('pegawai_id', $pegawai_transaksi_jasa)
+                            ->where('rincian_jasa_id', $rincian_jasa_id)
+                            ->first();
+                        $level = $detail_jasa->level;
+                        if ($level == 'beginner') {
+                            $sub_project->presentasi_gaji = 40;
+                        } elseif ($level == 'middle') {
+                            $sub_project->presentasi_gaji = 60;
+                        } else {
+                            $sub_project->presentasi_gaji = 100;
+                        }
                         $sub_project->save();
                     }
                 }
             }
 
-
             if ($data1 && $data2) {
-                // Generate 4 Diskusi setelah berhasil menyimpan MappingGrup dan MappingSubGrup
-                // $diskusiTypes = [
-                //     'Price Discussion',
-                //     'Project Discussion Phase 1',
-                //     'Project Discussion Phase 2',
-                //     'Project Discussion Phase 3',
-                // ];
-
-                // foreach ($diskusiTypes as $type) {
-                //     $diskusi = new Diskusi();
-                //     $diskusi->transaksi_id = $transaksi_id;
-                //     $diskusi->mapping_grup_id = $grup->id;
-                //     $diskusi->tipe_diskusi = $type;
-                //     $diskusi->status = 'not fixed';
-                //     $diskusi->user_id = $transaksi->user_id;
-                //     $diskusi->save();
-                // }
-
                 $diskusi = new Diskusi();
                 $diskusi->transaksi_id = $transaksi_id;
                 $diskusi->mapping_grup_id = $grup->id;
@@ -109,7 +103,7 @@ class GroupController extends Controller
                 foreach($rincian as $key => $rin){
                     $project = new Project();
                     $project->sub_grup_id = $sub_grup->id;
-                    $project->nama = 'Project Phase' . $key;
+                    $project->nama = 'Project Phase' . $key+1;
                     $project->save();
                 }
 
@@ -144,12 +138,24 @@ class GroupController extends Controller
                         $sub_project->mapping_sub_grup_id = $sub_grup->id;
                         $sub_project->rincian_jasa_id = $rincian_jasa_id;
                         $sub_project->pegawai_id = $pegawai_transaksi_jasa;
+                        $detail_jasa = DetailJasa::where('pegawai_id', $pegawai_transaksi_jasa)
+                                        ->where('rincian_jasa_id', $rincian_jasa_id)
+                                        ->first();
+                        $level = $detail_jasa->level;
+                        if($level == 'beginner'){
+                            $sub_project->presentasi_gaji = 40;
+                        }elseif($level == 'middle'){
+                            $sub_project->presentasi_gaji = 60;
+                        }else{
+                            $sub_project->presentasi_gaji = 100;
+                        }
                         $sub_project->save();
                     }
                 }
             }
 
             if ($data1 && $data2) {
+                event(new TransactionCreated($transaksi));
                 $rincian = $transaksi->rincian;
                 foreach ($rincian as $key => $rin) {
                     $project = new Project();

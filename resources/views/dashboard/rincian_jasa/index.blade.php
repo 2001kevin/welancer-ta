@@ -5,7 +5,7 @@
             <div class="d-flex align-items-center mb-4">
                 <img src="{{ asset('images/LOGO.png') }}" alt="Welancer">
                 <span class="title-welancer ms-3">Master Rincian Jasa</span>
-                <a href="{{ route('create-rincian') }}" class="button-create ms-auto py-2 px-3 bd-highlight">Create</a>
+                <a href="." class="button-create ms-auto py-2 px-3 bd-highlight">Create</a>
             </div>
             <table class="table table-borderless border-0" id="dataTable">
                 <thead>

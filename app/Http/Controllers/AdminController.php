@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Currency;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
     public function dashboard(){
-        return view('dashboard.dashboard');
+        $currency = Currency::all();
+        return view('dashboard.dashboard', compact('currency'));
     }
 }

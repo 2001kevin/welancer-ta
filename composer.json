@@ -11,6 +11,7 @@
         "laravel/framework": "^9.0",
         "laravel/sanctum": "^2.14",
         "laravel/tinker": "^2.7",
+        "magarrent/laravel-currency-formatter": "^1.0",
         "midtrans/midtrans-php": "^2.5",
         "pusher/pusher-php-server": "^7.2",
         "realrashid/sweet-alert": "^7.1"
@@ -28,7 +29,11 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+
+        "files": [
+             "app/Helpers/helpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
