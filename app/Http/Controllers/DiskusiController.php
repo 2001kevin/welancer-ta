@@ -13,9 +13,12 @@ use App\Models\Currency;
 use App\Models\DetailDiskusi;
 use App\Models\DetailTransaksi;
 use App\Models\MappingSubGrup;
+use App\Models\MappingSubProject;
 use App\Models\User;
 use App\Models\Pegawai;
+use App\Models\Project;
 use App\Models\TerminPembayaran;
+use Illuminate\Support\Facades\Log;
 
 class DiskusiController extends Controller
 {
@@ -33,10 +36,11 @@ class DiskusiController extends Controller
                 $grups = MappingGrup::whereHas('mapping_sub_grups')->where('pegawai_id', $adminId)->get();
                 $project_manager = MappingGrup::where('pegawai_id', $adminId)->exists();
                 $sub_grups = MappingSubGrup::where('pegawai_id', $adminId)->get();
+                $list_sub_grups = MappingSubGrup::whereIn('mapping_grup_id', $grups->pluck('id'))->get();
                 $grup_pm = MappingGrup::where('pegawai_id', $adminId)->pluck('id');
                 $mapping_grup_ids = $sub_grups->pluck('mapping_grup_id');
                 $diskusis = Diskusi::with(['comments'])->whereIn('mapping_grup_id', $grup_pm)->orderBy('id', 'desc')->get();
-                return view('dashboard.diskusi.room', compact('diskusis', 'grups', 'project_manager'));
+                return view('dashboard.diskusi.room', compact('diskusis', 'grups', 'sub_grups', 'project_manager', 'list_sub_grups'));
             }elseif($role == "superadmin"){
                 $grups = MappingGrup::whereHas('mapping_sub_grups')->get();
                 $project_manager = MappingGrup::where('pegawai_id', $adminId)->exists();
@@ -64,6 +68,7 @@ class DiskusiController extends Controller
         $diskusi = new Diskusi();
         $diskusi->mapping_grup_id = $request->input('grup');
         $diskusi->user_id = $id_user;
+        $diskusi->status = 'not fixed';
         $diskusi->transaksi_id = $id_transaksi;
         $diskusi->tipe_diskusi = $request->input('tipe');
         $success = $diskusi->save();
@@ -116,17 +121,16 @@ class DiskusiController extends Controller
     }
 
     public function selectPayment($id){
-        $grup = MappingGrup::find($id);
-        $transaksi_id = $grup->transaksi_id;
-        $termin_pembayaran = TerminPembayaran::where('transaksi_id', $transaksi_id)
-                                ->where('status_pembayaran', 'Payment Succesfull')->get();
-        return response()->json($termin_pembayaran);
+        // $grup = MappingGrup::find($id);
+        $sub_grup = MappingSubGrup::find($id);
+        $projects = Project::where('sub_grup_id', $sub_grup->id)->where('status', 'open')->get();
+        return response()->json($projects);
     }
 
     public function comment(Request $request, $id)
     {
 
-        if (auth()->guard('pegawai')) {
+        if (auth()->guard('pegawai')->check()) {
             $pegawai_id = auth()->guard('pegawai')->id();
             $comment = new Comment();
             $comment->senderUser_id = null;
@@ -196,17 +200,17 @@ class DiskusiController extends Controller
 
                 // Ambil semua MappingSubGrup berdasarkan mapping_grup_id
                 $sub_grups = MappingSubGrup::where('mapping_grup_id', $id_grup)->get();
-
+                $sub_projects = MappingSubProject::whereIn('mapping_sub_grup_id', $sub_grups->pluck('id'))->pluck('pegawai_id');
                 // Kumpulkan semua pegawai_id dari subgrup
                 $id_pegawai_subs = $sub_grups->pluck('pegawai_id')->all();
 
                 // Tambahkan pegawai_id dari mapping_grup ke daftar pegawai_id
                 $id_pegawai_grup = $mapping_grup->pegawai_id;
                 $id_pegawai_subs[] = $id_pegawai_grup;
+                $id_pegawai_subs = array_merge($id_pegawai_subs, $sub_projects->toArray());
 
                 // Hapus duplikasi pegawai_id jika ada
                 $id_pegawai_subs = array_unique($id_pegawai_subs);
-
                 // Ambil ID pengguna yang sedang login
                 $my_id = auth()->guard('pegawai')->id();
                 $target_id = $diskusi->user_id;
@@ -274,6 +278,7 @@ class DiskusiController extends Controller
 
     public function sendChat(Request $request)
     {
+        Log::info('Request Method: ' . $request->method());
         if (auth()->guard('pegawai')->check()) {
             $chat = DB::table('detail_diskusis')->insert([
                 'diskusi_id' => $request->room,

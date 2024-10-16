@@ -2,11 +2,23 @@
 @section('main')
     <div class="card border-0 shadow mb-4" style="width: 65rem;">
         <div class="card-body">
-            <div class="d-flex align-items-center mb-4">
-                <img src="{{ asset('images/LOGO.png') }}" alt="Welancer">
-                <span class="title-welancer ms-3">Payment</span>
+            <div class="flex justify-between items-center mb-4">
+                <div class="flex align-items-center mb-4">
+                    <img src="{{ asset('images/LOGO.png') }}" alt="Welancer">
+                    <span class="title-welancer ms-3">Payment</span>
+                </div>
                 {{-- <a href="{{ route('create-transaksi') }}" class="button-create ms-auto py-2 px-3 bd-highlight">Make
                         Project</a> --}}
+                <div>
+                    <form class="max-w-sm mx-auto">
+                        <select id="projectFilter" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            <option value="">Select Project</option>
+                            @foreach ($list_transaksis as $transaksi)
+                                <option value="{{ $transaksi->nama }}">{{ $transaksi->nama }}</option>
+                            @endforeach
+                        </select>
+                    </form>
+                </div>
             </div>
             @if ($termins->count() > 0)
                 <table class="table" id="dataTable">
@@ -171,4 +183,20 @@
             });
         });
     </script>
+    @section('scripts')
+    <script>
+        $(document).ready(function() {
+            // Inisialisasi DataTable
+            var table = $('#dataTable').DataTable();
+
+            // Event listener untuk dropdown filter
+            $('#projectFilter').on('change', function() {
+                var selectedProject = $(this).val();
+
+                // Filter tabel berdasarkan nilai kolom Project
+                table.column(2).search(selectedProject).draw();
+            });
+        });
+    </script>
+@endsection
 @endsection

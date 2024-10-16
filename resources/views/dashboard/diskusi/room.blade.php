@@ -76,11 +76,17 @@
                                             class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2.5 me-2 mb-2 focus:outline-none">Waiting</button>
                                     </td>
                                 @endif
-                                <td class="text-center"><button class="button-comment"
-                                        data-modal-target="comment-modal-{{ $diskusi->id }}"
-                                        data-modal-toggle="comment-modal-{{ $diskusi->id }}"><i
-                                            class="fa-solid fa-comment"></i></button></td>
-                                <td>
+                                @if (auth()->guard('pegawai')->user()->role !== 'superadmin')
+                                    <td class="text-center"><button class="button-comment"
+                                            data-modal-target="comment-modal-{{ $diskusi->id }}"
+                                            data-modal-toggle="comment-modal-{{ $diskusi->id }}"><i
+                                                class="fa-solid fa-comment"></i></button></td>
+                                    <td>
+                                @else
+                                    <td class="text-center"><button disabled class="button-comment bg-[#374151] disabled:pointer-events-none"
+                                            ><i class="fa-solid fa-comment"></i></button></td>
+                                    <td>
+                                @endif
                                     <div class="flex gap-1">
                                         @if ($diskusi->status == 'not fixed' || $diskusi->status == null)
                                             <a class="py-[5px] px-[9px] rounded-[12px] bg-[#374151] text-white"><i
@@ -89,9 +95,14 @@
                                                 <a class="py-[5px] px-[9px] rounded-[12px] bg-[#374151] text-white"><i
                                                         class="fa-solid fa-comment-dots"></i></a>
                                         @elseif ($diskusi->status == 'on discussion')
-                                            <a class="py-[5px] px-[9px] rounded-[12px] bg-[#16c098] hover:bg-[#12AF8A] text-white"
-                                                href="{{ route('room-diskusi', $diskusi->id) }}"><i
+                                            @if (auth()->guard('pegawai')->user()->role !== 'superadmin')
+                                                <a class="py-[5px] px-[9px] rounded-[12px] bg-[#16c098] hover:bg-[#12AF8A] text-white"
+                                                    href="{{ route('room-diskusi', $diskusi->id) }}"><i
+                                                        class="fa-solid fa-comment-dots"></i></a>
+                                            @else
+                                                <a class="py-[5px] px-[9px] rounded-[12px] bg-[#374151] text-white"><i
                                                     class="fa-solid fa-comment-dots"></i></a>
+                                            @endif
                                         @elseif($diskusi->status == 'fixed')
                                             <a class="py-[5px] px-[9px] rounded-[12px] bg-[#374151] text-white"><i
                                                     class="fa-solid fa-comment-dots"></i></a>
@@ -384,117 +395,124 @@
 
     <!-- Create modal -->
     <!-- Main modal -->
-    <div id="crud-modal" tabindex="-1" aria-hidden="true"
-        class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-[100%] md:inset-0 h-[calc(100%-1rem)] max-h-full">
-        <div class="relative p-4 w-full max-w-md max-h-full">
-            <!-- Modal content -->
-            <div class="relative bg-white rounded-lg shadow w-full">
-                <!-- Modal header -->
-                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t ">
-                    <h3 class="text-lg font-semibold text-gray-900 ">
-                        Create Discussion
-                    </h3>
-                    <button type="button"
-                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm h-8 w-8 ms-auto inline-flex justify-center items-center"
-                        data-modal-toggle="crud-modal">
-                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 14 14">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                        </svg>
-                        <span class="sr-only">Close modal</span>
-                    </button>
-                </div>
-                <!-- Modal body -->
-                <form action="{{ route('store-diskusi') }}" method="POST">
-                    @csrf
-                    <div class="p-4 md:p-5">
-                        <p class="text-gray-500 mb-4">Select Group:</p>
-                        <ul class="space-y-4 mb-4">
-                            @foreach ($grups as $grup)
-                                <li>
-                                    <input type="radio" id="grup-{{ $grup->id }}" name="grup"
-                                        value="{{ $grup->id }}" class="hidden peer" required />
-                                    <label for="grup-{{ $grup->id }}"
-                                        class="inline-flex items-center justify-between w-full p-3 text-gray-900 bg-white border border-gray-200 rounded-lg cursor-pointer peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-900 hover:bg-gray-100 ">
-                                        <div class="block">
-                                            <div class="w-full text-lg font-semibold">{{ $grup->nama }}</div>
-                                            <div class="w-full text-gray-500 peer-checked:text-blue-600">
-                                                {{ $grup->transaksis->nama }}
-                                            </div>
-                                        </div>
-                                        <svg class="w-4 h-4 ms-3 rtl:rotate-180 text-gray-500 peer-checked:"
-                                            aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                            viewBox="0 0 14 10">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9" />
-                                        </svg>
-                                    </label>
-                                </li>
-                            @endforeach
-                        </ul>
-                        <div class="col-span-2 mb-2">
-                            <label for="tipe" class="block mb-2 text-sm font-medium text-gray-900">Discussion
-                                Type</label>
-                            <select name="tipe" id="tipe" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5">
-                                <option selected="">Select Discussion Type</option>
-                                <option value="Price Discussion">Price Discussion</option>
-                            </select>
+    @auth('pegawai')
+        @if ($project_manager)
+
+            <div id="crud-modal" tabindex="-1" aria-hidden="true"
+                class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-[100%] md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                <div class="relative p-4 w-full max-w-md max-h-full">
+                    <!-- Modal content -->
+                    <div class="relative bg-white rounded-lg shadow w-full">
+                        <!-- Modal header -->
+                        <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t ">
+                            <h3 class="text-lg font-semibold text-gray-900 ">
+                                Create Discussion
+                            </h3>
+                            <button type="button"
+                                class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm h-8 w-8 ms-auto inline-flex justify-center items-center"
+                                data-modal-toggle="crud-modal">
+                                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 14 14">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                </svg>
+                                <span class="sr-only">Close modal</span>
+                            </button>
                         </div>
+                        <!-- Modal body -->
+                        <form action="{{ route('store-diskusi') }}" method="POST">
+                            @csrf
+                            <div class="p-4 md:p-5">
+                                <p class="text-gray-500 mb-4">Select Group:</p>
+                                <ul class="space-y-4 mb-4">
+                                    @foreach ($list_sub_grups as $sub_grup)
+                                        <li>
+                                            <input type="radio" id="grup-{{ $sub_grup->id }}" name="grup"
+                                                value="{{ $sub_grup->id }}" class="hidden peer" required />
+                                            <label for="grup-{{ $sub_grup->id }}"
+                                                class="inline-flex items-center justify-between w-full p-3 text-gray-900 bg-white border border-gray-200 rounded-lg cursor-pointer peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-900 hover:bg-gray-100 ">
+                                                <div class="block">
+                                                    <div class="w-full text-lg font-semibold">{{ $sub_grup->nama }}</div>
+                                                    <div class="w-full text-gray-500 peer-checked:text-blue-600">
+                                                        {{ $sub_grup->transaksi->nama }}
+                                                    </div>
+                                                </div>
+                                                <svg class="w-4 h-4 ms-3 rtl:rotate-180 text-gray-500 peer-checked:"
+                                                    aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                    viewBox="0 0 14 10">
+                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9" />
+                                                </svg>
+                                            </label>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                                <div class="col-span-2 mb-2">
+                                    <label for="tipe" class="block mb-2 text-sm font-medium text-gray-900">Discussion
+                                        Type</label>
+                                    <select name="tipe" id="tipe" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5">
+                                        <option selected="">Select Discussion Type</option>
+                                        <option value="Price Discussion">Price Discussion</option>
+                                    </select>
+                                </div>
 
-                        <button type="submit"
-                            class="text-white inline-flex w-full justify-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">
-                            Next step
-                        </button>
-                    </div>
-                </form>
-        </div>
-    </div>
-    </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const modals = document.querySelectorAll('[data-modal-target]');
+                                <button type="submit"
+                                    class="text-white inline-flex w-full justify-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">
+                                    Next step
+                                </button>
+                            </div>
+                        </form>
+                </div>
+            </div>
+            </div>
 
-            modals.forEach(function(modalTrigger) {
-                const modalId = modalTrigger.getAttribute('data-modal-target');
-                const modal = document.getElementById(modalId);
+        @endif
+    @endauth
+    @section('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const modals = document.querySelectorAll('[data-modal-target]');
 
-                if (modal) {
-                    modalTrigger.addEventListener('click', function() {
-                        modal.classList.remove('hidden');
-                        modal.classList.add('block');
-                    });
+                modals.forEach(function(modalTrigger) {
+                    const modalId = modalTrigger.getAttribute('data-modal-target');
+                    const modal = document.getElementById(modalId);
 
-                    modal.querySelector('[data-modal-hide]').addEventListener('click', function() {
-                        modal.classList.remove('block');
-                        modal.classList.add('hidden');
-                    });
-                }
-            });
-        });
-    </script>
-    <script>
-        document.querySelectorAll('input[name="grup"]').forEach(function (radio) {
-            radio.addEventListener('change', function () {
-                let id = this.value;
-
-                // Lakukan panggilan AJAX ke API
-                fetch(`/selectPayment/${id}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        // Bersihkan dropdown tipe
-                        let selectTipe = document.getElementById('tipe');
-                        selectTipe.innerHTML = `<option selected>Select Discussion Type</option>
-                                                <option value="Price Discussion">Price Discussion</option>`;
-
-
-                        data.forEach((termin, index) => {
-                            selectTipe.innerHTML += `<option value="Project Discussion Phase ${index + 1}">Project Discussion Phase ${index + 1}</option>`;
+                    if (modal) {
+                        modalTrigger.addEventListener('click', function() {
+                            modal.classList.remove('hidden');
+                            modal.classList.add('block');
                         });
-                        console.log(data);
-                    })
-                    .catch(error => console.error('Error:', error));
+
+                        modal.querySelector('[data-modal-hide]').addEventListener('click', function() {
+                            modal.classList.remove('block');
+                            modal.classList.add('hidden');
+                        });
+                    }
+                });
             });
-        });
-    </script>
+        </script>
+        <script>
+            document.querySelectorAll('input[name="grup"]').forEach(function (radio) {
+                radio.addEventListener('change', function () {
+                    let id = this.value;
+
+                    // Lakukan panggilan AJAX ke API
+                    fetch(`/selectPayment/${id}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            // Bersihkan dropdown tipe
+                            let selectTipe = document.getElementById('tipe');
+                            selectTipe.innerHTML = `<option selected>Select Discussion Type</option>
+                                                    <option value="Price Discussion">Price Discussion</option>`;
+
+
+                            data.forEach((project, index) => {
+                                selectTipe.innerHTML += `<option value="${project.nama}">${project.nama}</option>`;
+                            });
+                        })
+                        .catch(error => console.error('Error:', error));
+                });
+            });
+        </script>
+    @endsection
 @endsection

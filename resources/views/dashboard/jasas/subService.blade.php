@@ -15,22 +15,23 @@
                             <th scope="col">Unit</th>
                             <th scope="col">Unit Type</th>
                             <th scope="col">Price</th>
-                            <th scope="col">Required Skill</th>
-                            <th scope="col">Assigned To</th>
+                            {{-- <th scope="col">Required Skill</th>
+                            <th scope="col">Assigned To</th> --}}
                             <th scope="col">Action</th>
                         </tr>
                         </thead>
                         <tbody>
-                            @foreach ($detailJasas as $detailJasa)
+                            @foreach ($rincianJasas as $rincianJasa)
                                 <tr>
                                     <th scope="row">{{ $loop->index+1 }}</th>
-                                    <td>{{ $detailJasa->rincianJasa->nama }}</td>
-                                    <td>{{ $detailJasa->rincianJasa->unit }}</td>
-                                    <td>{{ $detailJasa->rincianJasa->tipe_unit }}</td>
-                                    <td>{{ formatCurrency($detailJasa->rincianJasa->harga, $currency[0]) }}</td>
-                                    <td>{{ $detailJasa->skill->nama}}</td>
-                                    <td>{{ $detailJasa->pegawai->name}}</td>
+                                    <td>{{ $rincianJasa->nama }}</td>
+                                    <td>{{ $rincianJasa->unit }}</td>
+                                    <td>{{ $rincianJasa->tipe_unit }}</td>
+                                    <td>{{ formatCurrency($rincianJasa->harga, $currency[0]) }}</td>
+                                    {{-- <td>{{ $detailJasa->skill->nama}}</td>
+                                    <td>{{ $detailJasa->pegawai->name}}</td> --}}
                                     <td class="d-flex gap-2">
+                                        <button class="button-group"><a class="text-white" href="{{ route('detail-subservice', $rincianJasa->id) }}"><i class="fa-regular fa-folder-open"></i></a></button>
                                         <button class="button-edit" data-bs-toggle="modal" data-bs-target="#updateJasa-"><i class="fas fa-pencil-alt"></i></button>
                                         <button class="button-delete"><i class="fas fa-times" data-bs-toggle="modal" data-bs-target="#deleteModal-"></i></button>
                                     </td>

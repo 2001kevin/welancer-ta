@@ -24,7 +24,11 @@
                                 <th scope="row">{{ $loop->index+1 }}</th>
                                 <td>{{ $jasa->nama }}</td>
                                 <td>{{ $jasa->deskripsi }}</td>
-                                <td>{{ formatCurrency( $jasa->min_price, $currency[0]) }} - {{ formatCurrency( $jasa->max_price, $currency[0]) }}</td>
+                                @if ($jasa->min_price == null && $jasa->max_price == null)
+                                    <td>{{ formatCurrency( 0, $currency[0]) }} - {{ formatCurrency( 0, $currency[0]) }}</td>
+                                @else
+                                    <td>{{ formatCurrency( $jasa->min_price, $currency[0]) }} - {{ formatCurrency( $jasa->max_price, $currency[0]) }}</td>
+                                @endif
                                 <td>{{ $jasa->kategori->nama }}</td>
                                 <td class="d-flex gap-2">
                                     <button class="button-edit" data-modal-toggle="update-modal-{{ $jasa->id }}" data-modal-target="update-modal-{{ $jasa->id }}"><i class="fas fa-pencil-alt"></i></button>

@@ -36,7 +36,7 @@ class Pegawai extends Model implements Authenticatable
 
     public function skills()
     {
-        return $this->belongsToMany(Skill::class, 'pegawai_skills')
+        return $this->belongsToMany(skill::class, 'pegawai_skills')
         ->withPivot('level');
     }
 

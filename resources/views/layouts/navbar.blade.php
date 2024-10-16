@@ -6,10 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('styles/style.css') }}">
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>Home Page</title>
+    <link rel="icon" href="{{ asset('images/LOGO.png') }}">
+    <title>Welancer</title>
 </head>
 
 <body>
+    @include('sweetalert::alert')
     @yield('content')
     <section class="header">
         <div class="content flex flex-col justify-between">
@@ -67,7 +69,7 @@
                     @else
                         <div>
                             <a class="font-medium text-white py-2 px-6 bg-violet-700 rounded-xl"
-                                href="{{ route('login') }}">Login</a>
+                                href="{{ route('login-user') }}">Login</a>
                         </div>
                     @endauth
                 @endauth

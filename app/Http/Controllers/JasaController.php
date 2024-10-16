@@ -138,11 +138,9 @@ class JasaController extends Controller
 
     public function detailSubJasa($id){
         $jasa = Jasa::find($id);
-        $subService = RincianJasa::where('jasa_id', $id)->pluck('id');
-        $detailJasas = DetailJasa::whereIn('rincian_jasa_id', $subService)->get();
+        $rincianJasas = RincianJasa::where('jasa_id', $id)->get();
         $currency = Currency::pluck('currency');
-        // return $detailJasas;
-        return view('dashboard.jasas.subService', compact('detailJasas', 'jasa', 'currency'));
+        return view('dashboard.jasas.subService', compact('rincianJasas', 'jasa', 'currency'));
     }
 
     public function storeDetailJasa(Request $request){

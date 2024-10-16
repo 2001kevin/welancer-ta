@@ -34,10 +34,12 @@
                     </p>
                     <p class="font-medium">{{ formatCurrency($room->transaksis->min, $currency[0]) }} - {{ formatCurrency($room->transaksis->max, $currency[0]) }}</p>
                 @endif
-                @if(Auth::guard('pegawai')->id() == $mapping_grup->pegawai_id)
-                    <button type="button" data-modal-target="crud-modal" data-modal-toggle="crud-modal"
-                        class=" mt-4 w-100 text-white bg-[#5932ea] hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none">Update</button>
-                @else
+                @if ($room->tipe_diskusi == 'Price Discussion')
+                    @if(Auth::guard('pegawai')->id() == $mapping_grup->pegawai_id)
+                        <button type="button" data-modal-target="crud-modal" data-modal-toggle="crud-modal"
+                            class=" mt-4 w-100 text-white bg-[#5932ea] hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none">Update</button>
+                    @else
+                    @endif
                 @endif
             </div>
         </div>
@@ -45,7 +47,7 @@
         <div class="main ">
             <div class="px-2 scroll" id="message">
             </div>
-            <form id="form">
+            <form id="form" method="POST">
                 <nav class="navbar bg-white navbar-expand-sm d-flex justify-content-between px-2">
                     <input type="text number" name="pesan" class="form-control" placeholder="Type a message...">
                     <div class="icondiv d-flex justify-content-end align-content-center text-center ml-2"> <i

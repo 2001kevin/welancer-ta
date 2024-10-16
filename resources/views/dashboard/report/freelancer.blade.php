@@ -95,6 +95,7 @@
             </div>
             <div id="revenueChart"></div>
         </div>
+
         <div class="p-6 bg-white border border-gray-200 rounded-lg mt-3 mb-4" >
             <div class="card-body">
               <div class="d-flex align-items-center mb-4">
@@ -126,35 +127,72 @@
             </div>
           </div>
         </div>
+
+        <div class="p-6 bg-white border border-gray-200 rounded-lg mt-3 mb-4">
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-4">
+                    <img src="{{ asset('images/LOGO.png') }}" alt="Welancer">
+                    <span class="title-welancer ms-3">Revenue Distribution</span>
+                </div>
+                <table class="table table-borderless border-0" id="dataTable2">
+                    <thead>
+                        <tr>
+                            <th scope="col">No</th>
+                            <th scope="col">Project</th>
+                            <th scope="col">Company</th>
+                            <th scope="col">Freelancer</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($subGrups as $subGrup)
+                            <tr>
+                                <th scope="row">{{ $loop->index + 1 }}</th>
+                                <td>{{ $subGrup->transaksi->nama }}</td>
+                                <td>{{ $subGrup->transaksi->keuntungan_bersih == null ? formatCurrency(0, $currency[0]) : formatCurrency($subGrup->transaksi->keuntungan_bersih, $currency[0])}}</td>
+                                <td>{{ $subGrup->keuntungan_bersih == null ? formatCurrency(0, $currency[0]) : formatCurrency($subGrup->keuntungan_bersih, $currency[0])}}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
     @section('scripts')
-        <script>
+     <script>
         var options = {
             chart: {
-                type: 'bar', // Jenis chart
-                height: "320px",
+                type: 'bar',
+                height: 350
             },
             series: [{
                 name: 'Revenue',
-                data: @json($revenuesData) // Data revenue per bulan
+                data: @json($revenuesData) // Tetap menggunakan data angka asli
             }],
             xaxis: {
                 categories: @json($months) // Label bulan
             },
-            // title: {
-            //     text: 'Revenue per Month (' + '{{ $currency[0] }}' + ')',
-            //     align: 'center'
-            // },
-            colors:'#1A56DB',
+            title: {
+                text: 'Revenue per Month (' + '{{ $currency[0] }}' + ')',
+                align: 'center'
+            },
+            colors: ['#1A56DB'],
             plotOptions: {
                 bar: {
-                horizontal: false,
-                columnWidth: "70%",
-                borderRadiusApplication: "end",
-                borderRadius: 12,
-                },
+                    horizontal: false,
+                    columnWidth: "70%",
+                    borderRadiusApplication: "end",
+                    borderRadius: 12
+                }
             },
+            tooltip: {
+                y: {
+                    formatter: function(value) {
+                        // Memformat nilai dalam tooltip dengan simbol mata uang
+                        return '{{ $currency[0] }}' + ' ' + value.toLocaleString();
+                    }
+                }
+            }
         };
 
         var chart = new ApexCharts(document.querySelector("#revenueChart"), options);

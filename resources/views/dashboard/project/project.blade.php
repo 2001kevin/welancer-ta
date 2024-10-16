@@ -44,9 +44,14 @@
                         <div class="block rounded-xl border border-gray-800 p-8 shadow-xl transition hover:border-blue-500/10 hover:shadow-blue-500/10"
                             href="#">
                             <img src="{{ asset('images/LOGO.png') }}" alt="">
+                            @if (auth()->check())
+                                    <h2 class="mt-4 text-xl font-bold text-black ">{{ $project->nama }}</h2>
+                            @endif
+                            @auth('pegawai')
                                 <a href="{{ route('detail-project', $project->id) }}">
                                     <h2 class="mt-4 text-xl font-bold text-black ">{{ $project->nama }}</h2>
                                 </a>
+                            @endauth
                             <h2 class="mb-2 text-lg font-semibold text-gray-900">Service Requested:</h2>
                             <ul class="max-w-md space-y-1 text-gray-500 list-inside mb-3">
                                 @foreach ($project->subGrup->detailTransaksi->detailTransaksiJasas as $coba)
@@ -61,7 +66,11 @@
                                 @endforeach
                             </ul>
                             <div class="flex items-center justify-between gap-4">
-                                @if ($project->link == null)
+                                @if ($project->link == null )
+                                    <button type="button"
+                                        class="text-white bg-slate-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2.5 me-2 mb-2 focus:outline-none"
+                                        disabled>View Project</button>
+                                @elseif ($project->status == 'done')
                                     <button type="button"
                                         class="text-white bg-slate-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2.5 me-2 mb-2 focus:outline-none"
                                         disabled>View Project</button>
@@ -76,6 +85,26 @@
                                     data-modal-toggle="comment-modal-{{ $project->id }}"><i
                                         class="fa-solid fa-comment"></i></button>
                             </div>
+                            @auth('web')
+                                @if (auth()->check() && ($project->status == 'not done' || $project->status == 'open'))
+                                    <form action="{{ route('update-status', $project->id) }}" method="POST">
+                                        @csrf
+                                        <input type="text" name="status" value="done" hidden>
+                                        <button type="submit" class="w-full focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ">Done</button>
+                                    </form>
+                                @else
+                                    <button type="submit" class="w-full focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 " disabled>Project Done</button>
+                                @endif
+                            @endauth
+                            @auth('pegawai')
+                                @if (auth()->guard('pegawai')->user()->id == $serviceLead_id && $project->status == 'done' )
+                                    <form action="{{ route('update-status', $project->id) }}" method="POST">
+                                        @csrf
+                                        <input type="text" name="status" value="open" hidden>
+                                        <button type="submit" class="w-full focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ">Undone</button>
+                                    </form>
+                                @endif
+                            @endauth
                         </div>
                     @elseif ($status_transaksi == 'All Payment Completed')
                         <div class="block rounded-xl border border-gray-800 p-8 shadow-xl transition hover:border-blue-500/10 hover:shadow-blue-500/10"
@@ -102,6 +131,10 @@
                                     <button type="button"
                                         class="text-white bg-slate-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2.5 me-2 mb-2 focus:outline-none"
                                         disabled>View Project</button>
+                                @elseif ($project->status == 'done')
+                                    <button type="button"
+                                        class="text-white bg-slate-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2.5 me-2 mb-2 focus:outline-none"
+                                        disabled>View Project</button>
                                 @else
                                     <a href="{{ $project->link }}" target="_blank">
                                         <button type="button"
@@ -113,7 +146,45 @@
                                     data-modal-toggle="comment-modal-{{ $project->id }}"><i
                                         class="fa-solid fa-comment"></i></button>
                             </div>
+                            @auth('web')
+                                @if (auth()->check() && ($project->status == 'not done' || $project->status == 'open'))
+                                    <form action="{{ route('update-status', $project->id) }}" method="POST">
+                                        @csrf
+                                        <input type="text" name="status" value="done" hidden>
+                                        <button type="submit" class="w-full focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ">Done</button>
+                                    </form>
+                                @else
+                                    <button type="submit" class="w-full focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 " disabled>Project Done</button>
+                                @endif
+                            @endauth
+                            @auth('pegawai')
+                                @if (auth()->guard('pegawai')->user()->id == $serviceLead_id && $project->status == 'done' )
+                                    <form action="{{ route('update-status', $project->id) }}" method="POST">
+                                        @csrf
+                                        <input type="text" name="status" value="open" hidden>
+                                        <button type="submit" class="w-full focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ">Undone</button>
+                                    </form>
+                                @endif
+                            @endauth
                         </div>
+                    @if (auth()->check() && $project->status == 'done')
+                        <div class="relative bg-white border rounded-xl border-gray-400">
+                            <div class="absolute top-50 left-50 w-full text-center">
+                                <p><strong>Project {{ $projectPhase }} done</strong></p>
+                            </div>
+                            <div class="blur-sm">
+                                <a class="block rounded-xl border border-gray-800 p-8 shadow-xl">
+                                    <img src="{{ asset('images/LOGO.png') }}" alt="">
+                                    <h2 class="mt-4 text-xl font-bold text-black">{{ $project->nama }}</h2>
+                                    <p class="mt-1 text-sm text-gray-500">
+                                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex ut quo possimus adipisci
+                                        distinctio alias voluptatum blanditiis laudantium.
+                                    </p>
+                                    <button class="button-comment"><i class="fa-solid fa-comment"></i></button>
+                                </a>
+                            </div>
+                        </div>
+                    @endif
                     @else
                         <div class="relative bg-white border rounded-xl border-gray-400">
                             <div class="absolute top-50 left-50 w-full text-center">

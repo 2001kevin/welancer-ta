@@ -16,6 +16,7 @@ use App\Models\skill;
 use App\Models\transaksi;
 use Illuminate\Http\Request;
 use App\Events\TransactionCreated;
+use App\Models\PegawaiSkill;
 
 class GroupController extends Controller
 {
@@ -31,7 +32,7 @@ class GroupController extends Controller
         $pegawais = Pegawai::all();
         $skill_pm = skill::where('nama', 'Project Manager')->first();
         $skill_id = $skill_pm->id;
-        $pm = DetailJasa::where('skill_id', $skill_id)->get();
+        $pm = PegawaiSkill::where('skill_id', $skill_id)->get();
         $transaksi = transaksi::find($id);
         $idTransaksi = $transaksi->id;
         $detailTransaksis = DetailTransaksi::where('transaksi_id', $idTransaksi)

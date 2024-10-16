@@ -18,6 +18,7 @@ use App\Http\Controllers\CommentProjectController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\RevenueDistributionController;
 use App\Http\Controllers\SettingTerminController;
 use App\Http\Controllers\UserController;
 use App\Models\RincianJasa;
@@ -27,7 +28,7 @@ Route::get('/', function () {
     return view('home');
 });
 
-Route::get('login-user', [Authentication::class, 'indexLoginUser'])->name('login');
+Route::get('login-user', [Authentication::class, 'indexLoginUser'])->name('login-user');
 Route::get('login-admin', [Authentication::class, 'indexLoginAdmin'])->name('login-admin');
 Route::post('loginAdmin', [Authentication::class, 'loginAdmin'])->name('loginAdmin');
 Route::post('login', [Authentication::class, 'loginUser'])->name('loginUser');
@@ -67,6 +68,8 @@ Route::post('rincian/store', [RincianJasaController::class, 'storeRincian'])->na
 Route::post('rincian/update/{id}', [RincianJasaController::class, 'updateRincian'])->name('update-rincian');
 Route::post('rincian/delete/{id}', [RincianJasaController::class, 'deleteRincian'])->name('delete-rincian');
 Route::get('get-sub-services/{id}', [RincianJasaController::class, 'getSubServices'])->name('get-sub-service');
+Route::get('rincian/assigned-freelancer/{id}', [RincianJasaController::class, 'detailJasa'])->name('detail-subservice');
+Route::post('add-freelancer/{id}', [RincianJasaController::class, 'addDetailJasa'])->name('add-detail-jasa');
 
 Route::get('detail/create', [JasaController::class, 'createDetailJasa'])->name('detail-jasa');
 Route::post('detail/store', [JasaController::class, 'storeDetailJasa'])->name('store-detail-jasa');
@@ -114,6 +117,7 @@ Route::get('/project/{id}', [ProjectController::class, 'project'])->name('projec
 Route::post('/project/comment/{id}', [CommentProjectController::class, 'comment'])->name('comment-project');
 Route::get('project/detail/{id}', [ProjectController::class, 'detailProject'])->name('detail-project');
 Route::post('/project/update/{id}', [ProjectController::class, 'updateLink'])->name('input-project');
+Route::post('/project/status/{id}', [ProjectController::class, 'updateStatus'])->name('update-status');
 
 Route::get('/setting/termin', [SettingTerminController::class, 'index'])->name('setting-termin');
 Route::post('/setting/store', [SettingTerminController::class, 'store'])->name('setting-store');
@@ -126,7 +130,12 @@ Route::get('/freelancer/create', [PegawaiController::class, 'create'])->name('cr
 Route::post('/freelancer/store', [PegawaiController::class, 'store'])->name('store-pegawai');
 Route::get('/get-pegawais-by-skill/{skillId}', [PegawaiController::class, 'getPegawaisBySkill']);
 Route::get('/freelancer/skill/{id}', [PegawaiController::class, 'detailSkill'])->name('freelancer-skill');
+Route::post('/freelancer/skill', [PegawaiController::class, 'addSkill'])->name('add-skill');
+Route::post('/freelancer/skill/{id}', [PegawaiController::class, 'updatePegawaiSkill'])->name('update-pegawai-skill');
+Route::post('/freelancer/skill-update/{id}', [PegawaiController::class, 'deletePegawaiSkill'])->name('delete-pegawai-skill');
 
 Route::get('/dashboard/report', [ReportController::class, 'adminReport'])->name('admin-report');
 Route::get('/report/freelancer/{id}', [ReportController::class, 'detailFreelancer'])->name('report-freelancer');
 Route::get('/report/freelancer', [ReportController::class, 'reportFreelancer'])->name('freelancer-report');
+
+Route::post('/revenue', [RevenueDistributionController::class, 'store'])->name('revenue-store');

@@ -13,13 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('projects', function (Blueprint $table) {
+        Schema::create('revenue_distributions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('sub_grup_id');
-            $table->string('nama');
-            $table->string('link')->nullable();
-            $table->enum('status', ['not done', 'done'])->default('not done')->nullable();
-            $table->foreign('sub_grup_id')->references('id')->on('mapping_sub_grups');
+            $table->decimal('freelancer');
+            $table->decimal('company');
             $table->timestamps();
             $table->dateTime('deleted_at')->nullable();
         });
@@ -32,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('projects');
+        Schema::dropIfExists('revenue_distributions');
     }
 };

@@ -17,14 +17,14 @@
                                 <label for="small-input" class="block mb-2 text-sm font-medium text-gray-900">Name</label>
                                 <input type="text" id="small-input"
                                     class="block w-full p-2 text-gray-900 border border-gray-500 rounded-lg bg-white text-xs focus:ring-blue-500 focus:border-blue-500"
-                                    placeholder="name" name="name">
+                                    placeholder="name" name="name" value="Group {{ $transaksi->nama }}-{{ $transaksi->user->name }}">
                             </div>
                             <label>Project Manager</label>
                             <div class="mt-2">
                                 <select class="js-example-basic-single w-full py-4" name="pm">
                                     <option>Choose Employee</option>
                                     @foreach ($pm as $project_manager)
-                                        <option value="{{ $project_manager->pegawai_id }}">{{ $project_manager->pegawai->name }}</option>
+                                        <option value="{{ $project_manager->pegawai_id }}">{{ $project_manager->pegawais->name }}</option>
                                     @endforeach
                                 </select>
                             </div>

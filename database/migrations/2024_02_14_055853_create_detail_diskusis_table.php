@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('detail_diskusis', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('diskusi_id');
-            $table->unsignedBigInteger('pegawai_id');
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('pegawai_id')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->string('text');
             $table->foreign('diskusi_id')->references('id')->on('diskusis')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('pegawai_id')->references('id')->on('pegawais')->onUpdate('cascade')->onDelete('cascade');

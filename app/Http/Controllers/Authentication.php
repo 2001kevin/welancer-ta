@@ -37,9 +37,14 @@ class Authentication extends Controller
             'email'=> $request->email,
             'password' => Hash::make($request->password),
         ]);
-        $user->save();
-        toast('Registrasi Sukses!','success');
-        return redirect()->route('login')->with('success', 'Registration success, Please Login!');
+        $data1 = $user->save();
+        if($data1){
+            toast('Registration Success!','success');
+            return redirect()->route('login-user');
+        }else{
+            alert()->error('Authentication Failed', 'Wrong email or password.');
+            return redirect()->back();
+        }
     }
 
     public function loginAdmin(Request $request){
@@ -50,13 +55,10 @@ class Authentication extends Controller
 
         // return $request;
         if (Auth::guard('pegawai')->attempt($credentials)) {
-            toast('Login Sukses!','success');
             return redirect()->intended('/');
         }else{
-
-            return back()->withErrors([
-               'password' => 'Wrong email or password',
-           ]);
+            alert()->error('Authentication Failed', 'Wrong email or password.');
+            return redirect()->back();
         }
 
         // if(Auth::attempt($credentials)){
@@ -75,7 +77,6 @@ class Authentication extends Controller
 
         // return $request;
         if (Auth::guard('web')->attempt($credentials)) {
-            toast('Login Sukses!','success');
             return redirect()->intended('/');
         }
 
@@ -85,9 +86,8 @@ class Authentication extends Controller
         //     return redirect()->intended('/');
         // }
 
-         return back()->withErrors([
-            'password' => 'Wrong email or password',
-        ]);
+        alert()->error('Authentication Failed', 'Wrong email or password.');
+        return redirect()->back();
     }
 
     public function logout(Request $request)

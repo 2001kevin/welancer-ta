@@ -2,14 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Currency;
+use App\Models\RevenueDistribution;
 use App\Models\SettingTermin;
 use Illuminate\Http\Request;
 
 class SettingTerminController extends Controller
 {
     public function index(){
+        $settingRevenue = RevenueDistribution::first();
         $settingTermin = SettingTermin::first();
-        return view('dashboard.setting.termin', compact('settingTermin'));
+        $currency = Currency::first();
+        return view('dashboard.setting.termin', compact('settingTermin', 'settingRevenue', 'currency'));
     }
 
     public function store(Request $request){

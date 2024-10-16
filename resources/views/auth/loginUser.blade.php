@@ -31,7 +31,7 @@
 
                   <span class="w-5/6 px-4 py-3 font-bold text-center">Sign in as Admin</span>
               </a>
-              <form action="{{ route('loginUser') }}" method="post">
+              <form action="{{ route('loginUser') }}" method="POST">
                 @csrf
                   <div class="mt-4">
                       <label class="block mb-2 text-sm font-medium text-gray-600" for="LoggingEmailAddress">Email Address</label>

@@ -31,24 +31,7 @@
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                         placeholder="unit type" required />
                                 </div>
-                                <div>
-                                    <label for="skill" class="block mb-2 text-sm font-medium text-gray-900">Required Skill</label>
-                                    <select id="skill" name="skill" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                                        <option selected>Choose skill</option>
-                                        @foreach ($skills as $skill)
-                                            <option value="{{ $skill->id }}">{{ $skill->nama }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div>
-                                    <label for="pegawai" class="block mb-2 text-sm font-medium text-gray-900">Assigned to</label>
-                                    <select id="pegawai" name="pegawai" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                                        <option selected>Choose a freelancer</option>
-                                        {{-- @foreach ($pegawais as $pegawai)
-                                            <option value="{{ $pegawai->id }}">{{ $pegawai->name }}</option>
-                                        @endforeach --}}
-                                    </select>
-                                </div>
+
                             </div>
                             <input type="text" name="jasa" value="{{ $jasa->id }}" hidden>
                             <div class="mb-6">
@@ -65,33 +48,4 @@
             </div>
         </div>
     </div>
-    @section('scripts')
-        <script>
-            document.getElementById('skill').addEventListener('change', function() {
-            var skillId = this.value;
-
-            // Jika skill belum dipilih, kosongkan pegawai
-            if (skillId === "Choose skill") {
-                document.getElementById('pegawai').innerHTML = '<option selected>Choose a freelancer</option>';
-                return;
-            }
-
-            // Lakukan AJAX request ke server
-            fetch(`/get-pegawais-by-skill/${skillId}`)
-                .then(response => response.json())
-                .then(data => {
-                    var pegawaiSelect = document.getElementById('pegawai');
-                    pegawaiSelect.innerHTML = '<option selected>Choose a freelancer</option>';
-
-                    // Isi dropdown pegawai dengan data yang diterima
-                    data.forEach(function(pegawai) {
-                        var option = document.createElement('option');
-                        option.value = pegawai.id;
-                        option.text = pegawai.name;
-                        pegawaiSelect.appendChild(option);
-                    });
-                });
-        });
-        </script>
-    @endsection
 @endsection

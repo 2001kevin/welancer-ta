@@ -52,11 +52,7 @@ class RincianJasaController extends Controller
         //     'harga' => $request->harga,
         //     'jasa_id' => $request->jasa
         // ]);
-        $pegawai = Pegawai::find($request->pegawai);
-        $skill = $pegawai->skills()->where('skill_id', $request->skill)->first();
 
-        // Mengambil level dari tabel pivot
-        $level = $skill->pivot->level;
 
         $rincianJasa = new RincianJasa();
         $rincianJasa->nama = $request->nama;
@@ -66,17 +62,16 @@ class RincianJasaController extends Controller
         $rincianJasa->harga = $request->harga;
         $data1 = $rincianJasa->save();
 
-        $detailJasa = new DetailJasa();
-        $detailJasa->skill_id = $request->skill;
-        $detailJasa->rincian_jasa_id = $rincianJasa->id;
-        $detailJasa->pegawai_id = $request->pegawai;
-        $detailJasa->level_freelancer = $level;
-        $data2 = $detailJasa->save();
+        // $detailJasa = new DetailJasa();
+        // $detailJasa->skill_id = $request->skill;
+        // $detailJasa->rincian_jasa_id = $rincianJasa->id;
+        // $detailJasa->pegawai_id = $request->pegawai;
+        // $detailJasa->level_freelancer = $level;
+        // $data2 = $detailJasa->save();
 
-        if($data1 && $data2){
+        if($data1){
             toast('Sub Service Created Successfully!','success');
         }
-
         return redirect(route('detail-subJasa', $request->jasa));
     }
 
@@ -113,5 +108,31 @@ class RincianJasaController extends Controller
         DB::table('rincian_jasas')->where('id', $id)->delete();
         toast('Data Rincian Sukses Dihapus!','success');
         return redirect(route('rincian-jasa'));
+    }
+
+    public function detailJasa($id){
+        $detailJasas = DetailJasa::where('rincian_jasa_id', $id)->get();
+        $skills = skill::all();
+        $rincianJasa = RincianJasa::find($id);
+        return view('dashboard.jasas.detailJasa', compact('detailJasas', 'skills', 'rincianJasa'));
+    }
+
+    public function addDetailJasa(Request $request){
+        $pegawai = Pegawai::find($request->pegawai);
+        $skill = $pegawai->skills()->where('skill_id', $request->skill)->first();
+
+        // Mengambil level dari tabel pivot
+        $level = $skill->pivot->level;
+
+        $detailJasa = new DetailJasa();
+        $detailJasa->skill_id = $request->skill;
+        $detailJasa->pegawai_id = $request->pegawai;
+        $detailJasa->level = $level;
+        $detailJasa->rincian_jasa_id = $request->rincian_jasa_id;
+        $data1 = $detailJasa->save();
+        if($data1){
+            toast('Freelancer added successfully!', 'success');
+            return redirect(route('detail-subservice', $request->rincian_jasa_id));
+        }
     }
 }

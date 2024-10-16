@@ -48,7 +48,7 @@
               <div class="flex items-center justify-between mt-4">
                   <span class="w-1/5 border-b md:w-1/4"></span>
 
-                  <a href="{{ route('login') }}" class="text-xs text-gray-500 uppercase hover:underline">or sign in</a>
+                  <a href="{{ route('login-user') }}" class="text-xs text-gray-500 uppercase hover:underline">or sign in</a>
 
                   <span class="w-1/5 border-b md:w-1/4"></span>
               </div>

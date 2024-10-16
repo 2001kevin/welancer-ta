@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Currency;
 use App\Models\MappingSubGrup;
 use App\Models\MappingSubProject;
+use App\Models\Project;
+use App\Models\RevenueDistribution;
 use App\Models\TerminPembayaran;
 use App\Models\transaksi;
 use Illuminate\Http\Request;
@@ -30,16 +32,18 @@ class TerminPembayaranController extends Controller
     public function index(){
         $termins = TerminPembayaran::orderBy('created_at', 'desc')->get();
         $currency = Currency::pluck('currency');
-        return view('dashboard.payment.index', compact('termins', 'currency'));
+        $transaksis = transaksi::all();
+        return view('dashboard.payment.index', compact('termins', 'currency', 'transaksis'));
     }
 
     public function userIndex(){
         $user_id = Auth::user()->id;
         $transaksis = transaksi::where('user_id', $user_id)->pluck('id');
-        $termins = TerminPembayaran::orderBy('created_at', 'desc')->whereIn('transaksi_id', $transaksis)->get();
+        $list_transaksis = transaksi::all();
+        $termins = TerminPembayaran::whereIn('transaksi_id', $transaksis)->orderBy('created_at', 'desc')->get();
         $currency = Currency::pluck('currency');
         // dd($termins);
-        return view('dashboard.payment.userIndex', compact('termins', 'currency'));
+        return view('dashboard.payment.userIndex', compact('termins', 'currency', 'transaksis', 'list_transaksis'));
     }
 
     public function createTransaction(Request $request)
@@ -123,11 +127,15 @@ class TerminPembayaranController extends Controller
             for ($i = 1; $i <= $jumlah_termin; $i++) {
                 if ($transaksi->status == 'Waiting for Payment' && $i == 1) {
                     $transaksi_id = $transaksi->id;
-                    $keuntungan_bersih = $transaksi->fix_price/2;
+                    $companyRevenue = RevenueDistribution::first();
+                    $cRevenue = $companyRevenue->company/100;
+                    $keuntungan_bersih = $transaksi->fix_price*$cRevenue;
                     $transaksi->keuntungan_bersih = $keuntungan_bersih;
 
                     $subGrup = MappingSubGrup::where('transaksi_id', $transaksi_id)->first();
-                    $subGrup->keuntungan_bersih = $keuntungan_bersih;
+                    $freelancerRevenue = RevenueDistribution::first();
+                    $fRevenue = $freelancerRevenue->freelancer/100;
+                    $subGrup->keuntungan_bersih = $transaksi->fix_price*$fRevenue;
                     $subGrup->save();
 
                     $subGrup_id = $subGrup->id;
@@ -138,7 +146,7 @@ class TerminPembayaranController extends Controller
                     if ($totalPresentasiGaji > 0) {
                         foreach ($subProyeks as $subProyek) {
                             $presentasiGaji = $subProyek->presentasi_gaji; // Perbaiki typo di sini
-                            $gaji = $presentasiGaji / $totalPresentasiGaji * $keuntungan_bersih;
+                            $gaji = $presentasiGaji / $totalPresentasiGaji * $subGrup->keuntungan_bersih;
                             $subProyek->gaji = $gaji;
                             $subProyek->save();
                         }
@@ -148,10 +156,22 @@ class TerminPembayaranController extends Controller
                         // Misalnya, log kesalahan atau atur gaji menjadi 0
                     }
                     $transaksi->status = 'Termin ' . $i . ' Completed';
+                    $project = Project::where('sub_grup_id', $subGrup_id)->where('nama', 'Project Phase ' . $i)->first();
+                    if($project){
+                        $project->status = 'open';
+                        $project->save();
+                    }
                     $transaksi->save();
                     break;
                 } elseif ($transaksi->status == 'Termin ' . ($i - 1) . ' Completed' && $i > 1) {
                     $transaksi->status = 'Termin ' . $i . ' Completed';
+                    $subGrup = MappingSubGrup::where('transaksi_id', $transaksi->id)->first();
+                    $subGrup_id = $subGrup->id;
+                    $project = Project::where('sub_grup_id', $subGrup_id)->where('nama', 'Project Phase ' . $i)->first();
+                    if ($project) {
+                        $project->status = 'open';
+                        $project->save();
+                    }
                     $transaksi->save();
                     break;
                 }
